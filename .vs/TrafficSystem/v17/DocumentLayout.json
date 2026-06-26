@@ -1,0 +1,261 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\services\\serialbridgeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\services\\serialbridgeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\services\\trafficservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\services\\trafficservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\models\\trafficstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\models\\trafficstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\models\\controllog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\models\\controllog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\hubs\\traffichub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\hubs\\traffichub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\controllers\\configcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\configcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\controllers\\controlcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\controlcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\controllers\\logscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\logscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\controllers\\statuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\statuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\models\\trafficlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\models\\trafficlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|d:\\iot\\trafficsystem_project\\trafficsystem\\backend\\models\\trafficconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0A26642-1CC6-4F4C-8BA6-3E7303635540}|Backend\\Backend.csproj|solutionrelative:backend\\models\\trafficconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "Backend\\WeatherForecast.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\WeatherForecast.cs",
+              "RelativeToolTip": "Backend\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:44:59.478Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Backend\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Backend\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:19:33.2Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TrafficHub.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Hubs\\TrafficHub.cs",
+              "RelativeDocumentMoniker": "Backend\\Hubs\\TrafficHub.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Hubs\\TrafficHub.cs",
+              "RelativeToolTip": "Backend\\Hubs\\TrafficHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:20:31.734Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ControlLog.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\ControlLog.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\ControlLog.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\ControlLog.cs",
+              "RelativeToolTip": "Backend\\Models\\ControlLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:20:13.732Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TrafficStatus.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\TrafficStatus.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\TrafficStatus.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\TrafficStatus.cs",
+              "RelativeToolTip": "Backend\\Models\\TrafficStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:19:53.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SerialBridgeService.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Services\\SerialBridgeService.cs",
+              "RelativeDocumentMoniker": "Backend\\Services\\SerialBridgeService.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Services\\SerialBridgeService.cs",
+              "RelativeToolTip": "Backend\\Services\\SerialBridgeService.cs",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAuwIcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:20:54.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Program.cs",
+              "RelativeDocumentMoniker": "Backend\\Program.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Program.cs",
+              "RelativeToolTip": "Backend\\Program.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAAkAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:24:38.423Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ConfigController.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\ConfigController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\ConfigController.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\ConfigController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\ConfigController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:22:56.79Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TrafficService.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Services\\TrafficService.cs",
+              "RelativeDocumentMoniker": "Backend\\Services\\TrafficService.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Services\\TrafficService.cs",
+              "RelativeToolTip": "Backend\\Services\\TrafficService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:20:46.083Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ControlController.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\ControlController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\ControlController.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\ControlController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\ControlController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:23:03.812Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "LogsController.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\LogsController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\LogsController.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\LogsController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\LogsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:23:10.756Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "StatusController.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\StatusController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\StatusController.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\StatusController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\StatusController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:22:52.826Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:40:44.188Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "TrafficLog.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\TrafficLog.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\TrafficLog.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\TrafficLog.cs",
+              "RelativeToolTip": "Backend\\Models\\TrafficLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:20:08.22Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "TrafficConfig.cs",
+              "DocumentMoniker": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\TrafficConfig.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\TrafficConfig.cs",
+              "ToolTip": "D:\\IOT\\TrafficSystem_Project\\TrafficSystem\\Backend\\Models\\TrafficConfig.cs",
+              "RelativeToolTip": "Backend\\Models\\TrafficConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T04:20:01.023Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
