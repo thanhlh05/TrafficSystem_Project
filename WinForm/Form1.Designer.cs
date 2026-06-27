@@ -28,59 +28,66 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             pnlSaBan = new Panel();
-            lblCountdown = new Label();
-            lblStatusTag = new Label();
-            grpLightNorth = new GroupBox();
-            grpLightWest = new GroupBox();
-            grpLightSouth = new GroupBox();
+            lblCountSouth = new Label();
+            lblCountEast = new Label();
+            lblCountWest = new Label();
+            lblCountNorth = new Label();
+            picIntersection = new PictureBox();
             grpLightEast = new GroupBox();
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
-            label5 = new Label();
-            label6 = new Label();
-            label7 = new Label();
-            label8 = new Label();
-            label9 = new Label();
-            label10 = new Label();
-            label11 = new Label();
-            label12 = new Label();
+            lblEastYellow = new Label();
+            lblEastGreen = new Label();
+            lblEastRed = new Label();
+            grpLightWest = new GroupBox();
+            lblWestYellow = new Label();
+            lblWestGreen = new Label();
+            lblWestRed = new Label();
+            grpLightSouth = new GroupBox();
+            lblSouthYellow = new Label();
+            lblSouthRed = new Label();
+            lblSouthGreen = new Label();
+            grpLightNorth = new GroupBox();
+            lblNorthYellow = new Label();
+            lblNorthRed = new Label();
+            lblNorthGreen = new Label();
+            lblStatusTag = new Label();
             grpControl = new GroupBox();
-            btnModeAuto = new Button();
-            btnModeManual = new Button();
-            btnModeEmergency = new Button();
             pnlManualGroup = new Panel();
-            btnNSG_EWR = new Button();
-            btnNSY_EWR = new Button();
-            btnEWG_NSR = new Button();
             btnEWY_NSR = new Button();
+            btnEWG_NSR = new Button();
+            btnNSY_EWR = new Button();
+            btnNSG_EWR = new Button();
+            btnModeEmergency = new Button();
+            btnModeManual = new Button();
+            btnModeAuto = new Button();
             grpConfig = new GroupBox();
-            label13 = new Label();
-            label14 = new Label();
-            label15 = new Label();
-            numGreenTime = new NumericUpDown();
-            numYellowTime = new NumericUpDown();
-            numRedTime = new NumericUpDown();
             btnSaveConfig = new Button();
+            numRedTime = new NumericUpDown();
+            numYellowTime = new NumericUpDown();
+            numGreenTime = new NumericUpDown();
+            label15 = new Label();
+            label14 = new Label();
+            label13 = new Label();
             grpLogs = new GroupBox();
             dgvLogs = new DataGridView();
             colTime = new DataGridViewTextBoxColumn();
             colEvent = new DataGridViewTextBoxColumn();
             colMode = new DataGridViewTextBoxColumn();
             colDetail = new DataGridViewTextBoxColumn();
+            timer1 = new System.Windows.Forms.Timer(components);
             pnlSaBan.SuspendLayout();
-            grpLightNorth.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picIntersection).BeginInit();
+            grpLightEast.SuspendLayout();
             grpLightWest.SuspendLayout();
             grpLightSouth.SuspendLayout();
-            grpLightEast.SuspendLayout();
+            grpLightNorth.SuspendLayout();
             grpControl.SuspendLayout();
             pnlManualGroup.SuspendLayout();
             grpConfig.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numGreenTime).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numYellowTime).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numRedTime).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numYellowTime).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numGreenTime).BeginInit();
             grpLogs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLogs).BeginInit();
             SuspendLayout();
@@ -88,81 +95,80 @@
             // pnlSaBan
             // 
             pnlSaBan.BackColor = Color.White;
+            pnlSaBan.Controls.Add(lblCountSouth);
+            pnlSaBan.Controls.Add(lblCountEast);
+            pnlSaBan.Controls.Add(lblCountWest);
+            pnlSaBan.Controls.Add(lblCountNorth);
+            pnlSaBan.Controls.Add(picIntersection);
             pnlSaBan.Controls.Add(grpLightEast);
             pnlSaBan.Controls.Add(grpLightWest);
             pnlSaBan.Controls.Add(grpLightSouth);
             pnlSaBan.Controls.Add(grpLightNorth);
             pnlSaBan.Controls.Add(lblStatusTag);
-            pnlSaBan.Controls.Add(lblCountdown);
             pnlSaBan.Location = new Point(15, 15);
             pnlSaBan.Name = "pnlSaBan";
             pnlSaBan.Size = new Size(550, 480);
             pnlSaBan.TabIndex = 0;
             // 
-            // lblCountdown
+            // lblCountSouth
             // 
-            lblCountdown.Font = new Font("Consolas", 28.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblCountdown.ForeColor = Color.DimGray;
-            lblCountdown.Location = new Point(215, 220);
-            lblCountdown.Name = "lblCountdown";
-            lblCountdown.Size = new Size(120, 50);
-            lblCountdown.TabIndex = 0;
-            lblCountdown.Text = "25";
-            lblCountdown.TextAlign = ContentAlignment.MiddleCenter;
+            lblCountSouth.AutoSize = true;
+            lblCountSouth.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCountSouth.ForeColor = Color.DarkSlateGray;
+            lblCountSouth.Location = new Point(321, 397);
+            lblCountSouth.Name = "lblCountSouth";
+            lblCountSouth.Size = new Size(79, 31);
+            lblCountSouth.TabIndex = 9;
+            lblCountSouth.Text = "label1";
             // 
-            // lblStatusTag
+            // lblCountEast
             // 
-            lblStatusTag.BackColor = SystemColors.ActiveCaption;
-            lblStatusTag.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblStatusTag.ForeColor = Color.Black;
-            lblStatusTag.Location = new Point(175, 175);
-            lblStatusTag.Name = "lblStatusTag";
-            lblStatusTag.Size = new Size(200, 30);
-            lblStatusTag.TabIndex = 1;
-            lblStatusTag.Text = "CHÊ ĐỘ: TỰ ĐỘNG";
-            lblStatusTag.TextAlign = ContentAlignment.MiddleCenter;
+            lblCountEast.AutoSize = true;
+            lblCountEast.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCountEast.ForeColor = Color.DarkSlateGray;
+            lblCountEast.Location = new Point(420, 273);
+            lblCountEast.Name = "lblCountEast";
+            lblCountEast.Size = new Size(79, 31);
+            lblCountEast.TabIndex = 8;
+            lblCountEast.Text = "label1";
             // 
-            // grpLightNorth
+            // lblCountWest
             // 
-            grpLightNorth.Controls.Add(label3);
-            grpLightNorth.Controls.Add(label1);
-            grpLightNorth.Controls.Add(label2);
-            grpLightNorth.Location = new Point(235, 20);
-            grpLightNorth.Name = "grpLightNorth";
-            grpLightNorth.Size = new Size(80, 130);
-            grpLightNorth.TabIndex = 2;
-            grpLightNorth.TabStop = false;
-            grpLightNorth.Text = "HƯỚNG BẮC";
+            lblCountWest.AutoSize = true;
+            lblCountWest.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCountWest.ForeColor = Color.DarkSlateGray;
+            lblCountWest.Location = new Point(58, 273);
+            lblCountWest.Name = "lblCountWest";
+            lblCountWest.Size = new Size(79, 31);
+            lblCountWest.TabIndex = 7;
+            lblCountWest.Text = "label1";
             // 
-            // grpLightWest
+            // lblCountNorth
             // 
-            grpLightWest.Controls.Add(label10);
-            grpLightWest.Controls.Add(label11);
-            grpLightWest.Controls.Add(label12);
-            grpLightWest.Location = new Point(40, 185);
-            grpLightWest.Name = "grpLightWest";
-            grpLightWest.Size = new Size(120, 85);
-            grpLightWest.TabIndex = 3;
-            grpLightWest.TabStop = false;
-            grpLightWest.Text = "HƯỚNG TÂY";
+            lblCountNorth.AutoSize = true;
+            lblCountNorth.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCountNorth.ForeColor = Color.DarkSlateGray;
+            lblCountNorth.Location = new Point(321, 86);
+            lblCountNorth.Name = "lblCountNorth";
+            lblCountNorth.Size = new Size(79, 31);
+            lblCountNorth.TabIndex = 6;
+            lblCountNorth.Text = "label1";
             // 
-            // grpLightSouth
+            // picIntersection
             // 
-            grpLightSouth.Controls.Add(label4);
-            grpLightSouth.Controls.Add(label5);
-            grpLightSouth.Controls.Add(label6);
-            grpLightSouth.Location = new Point(235, 330);
-            grpLightSouth.Name = "grpLightSouth";
-            grpLightSouth.Size = new Size(80, 130);
-            grpLightSouth.TabIndex = 3;
-            grpLightSouth.TabStop = false;
-            grpLightSouth.Text = "HƯỚNG NAM";
+            picIntersection.Image = Properties.Resources.intersection_top;
+            picIntersection.Location = new Point(196, 160);
+            picIntersection.Name = "picIntersection";
+            picIntersection.Size = new Size(160, 160);
+            picIntersection.SizeMode = PictureBoxSizeMode.Zoom;
+            picIntersection.TabIndex = 5;
+            picIntersection.TabStop = false;
             // 
             // grpLightEast
             // 
-            grpLightEast.Controls.Add(label9);
-            grpLightEast.Controls.Add(label8);
-            grpLightEast.Controls.Add(label7);
+            grpLightEast.Controls.Add(lblEastYellow);
+            grpLightEast.Controls.Add(lblEastGreen);
+            grpLightEast.Controls.Add(lblEastRed);
             grpLightEast.Location = new Point(390, 185);
             grpLightEast.Name = "grpLightEast";
             grpLightEast.Size = new Size(145, 85);
@@ -170,101 +176,149 @@
             grpLightEast.TabStop = false;
             grpLightEast.Text = "HƯỚNG ĐÔNG";
             // 
-            // label1
+            // lblEastYellow
             // 
-            label1.BackColor = Color.Gainsboro;
-            label1.Location = new Point(27, 49);
-            label1.Name = "label1";
-            label1.Size = new Size(22, 22);
-            label1.TabIndex = 5;
+            lblEastYellow.BackColor = Color.Gainsboro;
+            lblEastYellow.Location = new Point(58, 35);
+            lblEastYellow.Name = "lblEastYellow";
+            lblEastYellow.Size = new Size(22, 22);
+            lblEastYellow.TabIndex = 10;
             // 
-            // label2
+            // lblEastGreen
             // 
-            label2.BackColor = Color.Gainsboro;
-            label2.Location = new Point(27, 100);
-            label2.Name = "label2";
-            label2.Size = new Size(22, 22);
-            label2.TabIndex = 6;
+            lblEastGreen.BackColor = Color.Gainsboro;
+            lblEastGreen.Location = new Point(86, 35);
+            lblEastGreen.Name = "lblEastGreen";
+            lblEastGreen.Size = new Size(22, 22);
+            lblEastGreen.TabIndex = 9;
             // 
-            // label3
+            // lblEastRed
             // 
-            label3.BackColor = Color.Gainsboro;
-            label3.Location = new Point(27, 75);
-            label3.Name = "label3";
-            label3.Size = new Size(22, 22);
-            label3.TabIndex = 7;
+            lblEastRed.BackColor = Color.Gainsboro;
+            lblEastRed.Location = new Point(30, 35);
+            lblEastRed.Name = "lblEastRed";
+            lblEastRed.Size = new Size(22, 22);
+            lblEastRed.TabIndex = 8;
             // 
-            // label4
+            // grpLightWest
             // 
-            label4.BackColor = Color.Gainsboro;
-            label4.Location = new Point(27, 76);
-            label4.Name = "label4";
-            label4.Size = new Size(22, 22);
-            label4.TabIndex = 10;
+            grpLightWest.Controls.Add(lblWestYellow);
+            grpLightWest.Controls.Add(lblWestGreen);
+            grpLightWest.Controls.Add(lblWestRed);
+            grpLightWest.Location = new Point(40, 185);
+            grpLightWest.Name = "grpLightWest";
+            grpLightWest.Size = new Size(120, 85);
+            grpLightWest.TabIndex = 3;
+            grpLightWest.TabStop = false;
+            grpLightWest.Text = "HƯỚNG TÂY";
             // 
-            // label5
+            // lblWestYellow
             // 
-            label5.BackColor = Color.Gainsboro;
-            label5.Location = new Point(27, 50);
-            label5.Name = "label5";
-            label5.Size = new Size(22, 22);
-            label5.TabIndex = 8;
+            lblWestYellow.BackColor = Color.Gainsboro;
+            lblWestYellow.Location = new Point(47, 35);
+            lblWestYellow.Name = "lblWestYellow";
+            lblWestYellow.Size = new Size(22, 22);
+            lblWestYellow.TabIndex = 13;
             // 
-            // label6
+            // lblWestGreen
             // 
-            label6.BackColor = Color.Gainsboro;
-            label6.Location = new Point(27, 101);
-            label6.Name = "label6";
-            label6.Size = new Size(22, 22);
-            label6.TabIndex = 9;
+            lblWestGreen.BackColor = Color.Gainsboro;
+            lblWestGreen.Location = new Point(75, 35);
+            lblWestGreen.Name = "lblWestGreen";
+            lblWestGreen.Size = new Size(22, 22);
+            lblWestGreen.TabIndex = 12;
             // 
-            // label7
+            // lblWestRed
             // 
-            label7.BackColor = Color.Gainsboro;
-            label7.Location = new Point(30, 35);
-            label7.Name = "label7";
-            label7.Size = new Size(22, 22);
-            label7.TabIndex = 8;
+            lblWestRed.BackColor = Color.Gainsboro;
+            lblWestRed.Location = new Point(19, 35);
+            lblWestRed.Name = "lblWestRed";
+            lblWestRed.Size = new Size(22, 22);
+            lblWestRed.TabIndex = 11;
             // 
-            // label8
+            // grpLightSouth
             // 
-            label8.BackColor = Color.Gainsboro;
-            label8.Location = new Point(86, 35);
-            label8.Name = "label8";
-            label8.Size = new Size(22, 22);
-            label8.TabIndex = 9;
+            grpLightSouth.Controls.Add(lblSouthYellow);
+            grpLightSouth.Controls.Add(lblSouthRed);
+            grpLightSouth.Controls.Add(lblSouthGreen);
+            grpLightSouth.Location = new Point(235, 330);
+            grpLightSouth.Name = "grpLightSouth";
+            grpLightSouth.Size = new Size(80, 130);
+            grpLightSouth.TabIndex = 3;
+            grpLightSouth.TabStop = false;
+            grpLightSouth.Text = "HƯỚNG NAM";
             // 
-            // label9
+            // lblSouthYellow
             // 
-            label9.BackColor = Color.Gainsboro;
-            label9.Location = new Point(58, 35);
-            label9.Name = "label9";
-            label9.Size = new Size(22, 22);
-            label9.TabIndex = 10;
+            lblSouthYellow.BackColor = Color.Gainsboro;
+            lblSouthYellow.Location = new Point(27, 76);
+            lblSouthYellow.Name = "lblSouthYellow";
+            lblSouthYellow.Size = new Size(22, 22);
+            lblSouthYellow.TabIndex = 10;
             // 
-            // label10
+            // lblSouthRed
             // 
-            label10.BackColor = Color.Gainsboro;
-            label10.Location = new Point(47, 35);
-            label10.Name = "label10";
-            label10.Size = new Size(22, 22);
-            label10.TabIndex = 13;
+            lblSouthRed.BackColor = Color.Gainsboro;
+            lblSouthRed.Location = new Point(27, 50);
+            lblSouthRed.Name = "lblSouthRed";
+            lblSouthRed.Size = new Size(22, 22);
+            lblSouthRed.TabIndex = 8;
             // 
-            // label11
+            // lblSouthGreen
             // 
-            label11.BackColor = Color.Gainsboro;
-            label11.Location = new Point(75, 35);
-            label11.Name = "label11";
-            label11.Size = new Size(22, 22);
-            label11.TabIndex = 12;
+            lblSouthGreen.BackColor = Color.Gainsboro;
+            lblSouthGreen.Location = new Point(27, 101);
+            lblSouthGreen.Name = "lblSouthGreen";
+            lblSouthGreen.Size = new Size(22, 22);
+            lblSouthGreen.TabIndex = 9;
             // 
-            // label12
+            // grpLightNorth
             // 
-            label12.BackColor = Color.Gainsboro;
-            label12.Location = new Point(19, 35);
-            label12.Name = "label12";
-            label12.Size = new Size(22, 22);
-            label12.TabIndex = 11;
+            grpLightNorth.Controls.Add(lblNorthYellow);
+            grpLightNorth.Controls.Add(lblNorthRed);
+            grpLightNorth.Controls.Add(lblNorthGreen);
+            grpLightNorth.Location = new Point(235, 20);
+            grpLightNorth.Name = "grpLightNorth";
+            grpLightNorth.Size = new Size(80, 130);
+            grpLightNorth.TabIndex = 2;
+            grpLightNorth.TabStop = false;
+            grpLightNorth.Text = "HƯỚNG BẮC";
+            // 
+            // lblNorthYellow
+            // 
+            lblNorthYellow.BackColor = Color.Gainsboro;
+            lblNorthYellow.Location = new Point(27, 75);
+            lblNorthYellow.Name = "lblNorthYellow";
+            lblNorthYellow.Size = new Size(22, 22);
+            lblNorthYellow.TabIndex = 7;
+            // 
+            // lblNorthRed
+            // 
+            lblNorthRed.BackColor = Color.Gainsboro;
+            lblNorthRed.Location = new Point(27, 49);
+            lblNorthRed.Name = "lblNorthRed";
+            lblNorthRed.Size = new Size(22, 22);
+            lblNorthRed.TabIndex = 5;
+            // 
+            // lblNorthGreen
+            // 
+            lblNorthGreen.BackColor = Color.Gainsboro;
+            lblNorthGreen.Location = new Point(27, 100);
+            lblNorthGreen.Name = "lblNorthGreen";
+            lblNorthGreen.Size = new Size(22, 22);
+            lblNorthGreen.TabIndex = 6;
+            // 
+            // lblStatusTag
+            // 
+            lblStatusTag.BackColor = SystemColors.ActiveCaption;
+            lblStatusTag.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblStatusTag.ForeColor = Color.Black;
+            lblStatusTag.Location = new Point(350, 0);
+            lblStatusTag.Name = "lblStatusTag";
+            lblStatusTag.Size = new Size(200, 30);
+            lblStatusTag.TabIndex = 1;
+            lblStatusTag.Text = "CHÊ ĐỘ: TỰ ĐỘNG";
+            lblStatusTag.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // grpControl
             // 
@@ -279,29 +333,65 @@
             grpControl.TabStop = false;
             grpControl.Text = "ĐIỀU KHIỂN HỆ THỐNG";
             // 
-            // btnModeAuto
+            // pnlManualGroup
             // 
-            btnModeAuto.BackColor = Color.FromArgb(46, 204, 113);
-            btnModeAuto.Cursor = Cursors.Cross;
-            btnModeAuto.ForeColor = Color.White;
-            btnModeAuto.Location = new Point(20, 30);
-            btnModeAuto.Name = "btnModeAuto";
-            btnModeAuto.Size = new Size(110, 45);
-            btnModeAuto.TabIndex = 0;
-            btnModeAuto.Text = "TỰ ĐỘNG";
-            btnModeAuto.UseVisualStyleBackColor = false;
+            pnlManualGroup.Controls.Add(btnEWY_NSR);
+            pnlManualGroup.Controls.Add(btnEWG_NSR);
+            pnlManualGroup.Controls.Add(btnNSY_EWR);
+            pnlManualGroup.Controls.Add(btnNSG_EWR);
+            pnlManualGroup.Enabled = false;
+            pnlManualGroup.Location = new Point(20, 90);
+            pnlManualGroup.Name = "pnlManualGroup";
+            pnlManualGroup.Size = new Size(345, 150);
+            pnlManualGroup.TabIndex = 3;
             // 
-            // btnModeManual
+            // btnEWY_NSR
             // 
-            btnModeManual.BackColor = Color.FromArgb(52, 152, 219);
-            btnModeManual.Cursor = Cursors.Cross;
-            btnModeManual.ForeColor = Color.White;
-            btnModeManual.Location = new Point(135, 30);
-            btnModeManual.Name = "btnModeManual";
-            btnModeManual.Size = new Size(110, 45);
-            btnModeManual.TabIndex = 1;
-            btnModeManual.Text = "THỦ CÔNG";
-            btnModeManual.UseVisualStyleBackColor = false;
+            btnEWY_NSR.BackColor = Color.LightGray;
+            btnEWY_NSR.FlatStyle = FlatStyle.Flat;
+            btnEWY_NSR.Location = new Point(20, 110);
+            btnEWY_NSR.Name = "btnEWY_NSR";
+            btnEWY_NSR.Size = new Size(310, 30);
+            btnEWY_NSR.TabIndex = 3;
+            btnEWY_NSR.Text = "Đông - Tây VÀNG / Bắc - Nam ĐỎ";
+            btnEWY_NSR.UseVisualStyleBackColor = false;
+            btnEWY_NSR.Click += btnEWY_NSR_Click;
+            // 
+            // btnEWG_NSR
+            // 
+            btnEWG_NSR.BackColor = Color.LightGray;
+            btnEWG_NSR.FlatStyle = FlatStyle.Flat;
+            btnEWG_NSR.Location = new Point(20, 75);
+            btnEWG_NSR.Name = "btnEWG_NSR";
+            btnEWG_NSR.Size = new Size(310, 30);
+            btnEWG_NSR.TabIndex = 2;
+            btnEWG_NSR.Text = "Đông - Tây XANH / Bắc - Nam ĐỎ";
+            btnEWG_NSR.UseVisualStyleBackColor = false;
+            btnEWG_NSR.Click += btnEWG_NSR_Click;
+            // 
+            // btnNSY_EWR
+            // 
+            btnNSY_EWR.BackColor = Color.LightGray;
+            btnNSY_EWR.FlatStyle = FlatStyle.Flat;
+            btnNSY_EWR.Location = new Point(20, 40);
+            btnNSY_EWR.Name = "btnNSY_EWR";
+            btnNSY_EWR.Size = new Size(310, 30);
+            btnNSY_EWR.TabIndex = 1;
+            btnNSY_EWR.Text = "Bắc - Nam VÀNG / Đông - Tây ĐỎ";
+            btnNSY_EWR.UseVisualStyleBackColor = false;
+            btnNSY_EWR.Click += btnNSY_EWR_Click;
+            // 
+            // btnNSG_EWR
+            // 
+            btnNSG_EWR.BackColor = Color.LightGray;
+            btnNSG_EWR.FlatStyle = FlatStyle.Flat;
+            btnNSG_EWR.Location = new Point(20, 5);
+            btnNSG_EWR.Name = "btnNSG_EWR";
+            btnNSG_EWR.Size = new Size(310, 30);
+            btnNSG_EWR.TabIndex = 0;
+            btnNSG_EWR.Text = "Bắc - Nam XANH / Đông - Tây ĐỎ";
+            btnNSG_EWR.UseVisualStyleBackColor = false;
+            btnNSG_EWR.Click += btnNSG_EWR_Click;
             // 
             // btnModeEmergency
             // 
@@ -315,61 +405,31 @@
             btnModeEmergency.Text = "KHẨN CẤP";
             btnModeEmergency.UseVisualStyleBackColor = false;
             // 
-            // pnlManualGroup
+            // btnModeManual
             // 
-            pnlManualGroup.Controls.Add(btnEWY_NSR);
-            pnlManualGroup.Controls.Add(btnEWG_NSR);
-            pnlManualGroup.Controls.Add(btnNSY_EWR);
-            pnlManualGroup.Controls.Add(btnNSG_EWR);
-            pnlManualGroup.Enabled = false;
-            pnlManualGroup.Location = new Point(20, 90);
-            pnlManualGroup.Name = "pnlManualGroup";
-            pnlManualGroup.Size = new Size(345, 150);
-            pnlManualGroup.TabIndex = 3;
+            btnModeManual.BackColor = Color.FromArgb(52, 152, 219);
+            btnModeManual.Cursor = Cursors.Cross;
+            btnModeManual.ForeColor = Color.White;
+            btnModeManual.Location = new Point(135, 30);
+            btnModeManual.Name = "btnModeManual";
+            btnModeManual.Size = new Size(110, 45);
+            btnModeManual.TabIndex = 1;
+            btnModeManual.Text = "THỦ CÔNG";
+            btnModeManual.UseVisualStyleBackColor = false;
+            btnModeManual.Click += btnModeManual_Click;
             // 
-            // btnNSG_EWR
+            // btnModeAuto
             // 
-            btnNSG_EWR.BackColor = Color.LightGray;
-            btnNSG_EWR.FlatStyle = FlatStyle.Flat;
-            btnNSG_EWR.Location = new Point(20, 5);
-            btnNSG_EWR.Name = "btnNSG_EWR";
-            btnNSG_EWR.Size = new Size(310, 30);
-            btnNSG_EWR.TabIndex = 0;
-            btnNSG_EWR.Text = "Bắc - Nam XANH / Đông - Tây ĐỎ";
-            btnNSG_EWR.UseVisualStyleBackColor = false;
-            // 
-            // btnNSY_EWR
-            // 
-            btnNSY_EWR.BackColor = Color.LightGray;
-            btnNSY_EWR.FlatStyle = FlatStyle.Flat;
-            btnNSY_EWR.Location = new Point(20, 40);
-            btnNSY_EWR.Name = "btnNSY_EWR";
-            btnNSY_EWR.Size = new Size(310, 30);
-            btnNSY_EWR.TabIndex = 1;
-            btnNSY_EWR.Text = "Bắc - Nam VÀNG / Đông - Tây ĐỎ";
-            btnNSY_EWR.UseVisualStyleBackColor = false;
-            // 
-            // btnEWG_NSR
-            // 
-            btnEWG_NSR.BackColor = Color.LightGray;
-            btnEWG_NSR.FlatStyle = FlatStyle.Flat;
-            btnEWG_NSR.Location = new Point(20, 75);
-            btnEWG_NSR.Name = "btnEWG_NSR";
-            btnEWG_NSR.Size = new Size(310, 30);
-            btnEWG_NSR.TabIndex = 2;
-            btnEWG_NSR.Text = "Đông - Tây XANH / Bắc - Nam ĐỎ";
-            btnEWG_NSR.UseVisualStyleBackColor = false;
-            // 
-            // btnEWY_NSR
-            // 
-            btnEWY_NSR.BackColor = Color.LightGray;
-            btnEWY_NSR.FlatStyle = FlatStyle.Flat;
-            btnEWY_NSR.Location = new Point(20, 110);
-            btnEWY_NSR.Name = "btnEWY_NSR";
-            btnEWY_NSR.Size = new Size(310, 30);
-            btnEWY_NSR.TabIndex = 3;
-            btnEWY_NSR.Text = "Đông - Tây VÀNG / Bắc - Nam ĐỎ";
-            btnEWY_NSR.UseVisualStyleBackColor = false;
+            btnModeAuto.BackColor = Color.FromArgb(46, 204, 113);
+            btnModeAuto.Cursor = Cursors.Cross;
+            btnModeAuto.ForeColor = Color.White;
+            btnModeAuto.Location = new Point(20, 30);
+            btnModeAuto.Name = "btnModeAuto";
+            btnModeAuto.Size = new Size(110, 45);
+            btnModeAuto.TabIndex = 0;
+            btnModeAuto.Text = "TỰ ĐỘNG";
+            btnModeAuto.UseVisualStyleBackColor = false;
+            btnModeAuto.Click += btnModeAuto_Click;
             // 
             // grpConfig
             // 
@@ -387,63 +447,6 @@
             grpConfig.TabStop = false;
             grpConfig.Text = "CẤU HÌNH THỜI GIAN";
             // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Location = new Point(5, 20);
-            label13.Name = "label13";
-            label13.Size = new Size(163, 23);
-            label13.TabIndex = 0;
-            label13.Text = "Thời gian đèn Xanh:";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(5, 60);
-            label14.Name = "label14";
-            label14.Size = new Size(163, 23);
-            label14.TabIndex = 1;
-            label14.Text = "Thời gian đèn Vàng:";
-            // 
-            // label15
-            // 
-            label15.AutoSize = true;
-            label15.Location = new Point(5, 100);
-            label15.Name = "label15";
-            label15.Size = new Size(146, 23);
-            label15.TabIndex = 2;
-            label15.Text = "Thời gian đèn Đỏ:";
-            // 
-            // numGreenTime
-            // 
-            numGreenTime.Location = new Point(170, 20);
-            numGreenTime.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
-            numGreenTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numGreenTime.Name = "numGreenTime";
-            numGreenTime.Size = new Size(150, 30);
-            numGreenTime.TabIndex = 3;
-            numGreenTime.Value = new decimal(new int[] { 25, 0, 0, 0 });
-            // 
-            // numYellowTime
-            // 
-            numYellowTime.Location = new Point(170, 60);
-            numYellowTime.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
-            numYellowTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numYellowTime.Name = "numYellowTime";
-            numYellowTime.Size = new Size(150, 30);
-            numYellowTime.TabIndex = 4;
-            numYellowTime.Value = new decimal(new int[] { 3, 0, 0, 0 });
-            // 
-            // numRedTime
-            // 
-            numRedTime.Location = new Point(170, 100);
-            numRedTime.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
-            numRedTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numRedTime.Name = "numRedTime";
-            numRedTime.Size = new Size(150, 30);
-            numRedTime.TabIndex = 5;
-            numRedTime.Value = new decimal(new int[] { 28, 0, 0, 0 });
-            // 
             // btnSaveConfig
             // 
             btnSaveConfig.BackColor = Color.DarkSlateGray;
@@ -455,6 +458,64 @@
             btnSaveConfig.TabIndex = 6;
             btnSaveConfig.Text = "LƯU VÀ ÁP DỤNG CẤU HÌNH";
             btnSaveConfig.UseVisualStyleBackColor = false;
+            btnSaveConfig.Click += btnSaveConfig_Click;
+            // 
+            // numRedTime
+            // 
+            numRedTime.Location = new Point(170, 100);
+            numRedTime.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
+            numRedTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numRedTime.Name = "numRedTime";
+            numRedTime.Size = new Size(150, 30);
+            numRedTime.TabIndex = 5;
+            numRedTime.Value = new decimal(new int[] { 28, 0, 0, 0 });
+            // 
+            // numYellowTime
+            // 
+            numYellowTime.Location = new Point(170, 60);
+            numYellowTime.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            numYellowTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numYellowTime.Name = "numYellowTime";
+            numYellowTime.Size = new Size(150, 30);
+            numYellowTime.TabIndex = 4;
+            numYellowTime.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            // 
+            // numGreenTime
+            // 
+            numGreenTime.Location = new Point(170, 20);
+            numGreenTime.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
+            numGreenTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numGreenTime.Name = "numGreenTime";
+            numGreenTime.Size = new Size(150, 30);
+            numGreenTime.TabIndex = 3;
+            numGreenTime.Value = new decimal(new int[] { 25, 0, 0, 0 });
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(5, 100);
+            label15.Name = "label15";
+            label15.Size = new Size(146, 23);
+            label15.TabIndex = 2;
+            label15.Text = "Thời gian đèn Đỏ:";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(5, 60);
+            label14.Name = "label14";
+            label14.Size = new Size(163, 23);
+            label14.TabIndex = 1;
+            label14.Text = "Thời gian đèn Vàng:";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(5, 20);
+            label13.Name = "label13";
+            label13.Size = new Size(163, 23);
+            label13.TabIndex = 0;
+            label13.Text = "Thời gian đèn Xanh:";
             // 
             // grpLogs
             // 
@@ -506,6 +567,12 @@
             colDetail.MinimumWidth = 6;
             colDetail.Name = "colDetail";
             // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 23F);
@@ -521,18 +588,21 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "HỆ THỐNG ĐIỀU KHIỂN & GIÁM SÁT GIAO THÔNG THÔNG MINH";
+            Load += Form1_Load;
             pnlSaBan.ResumeLayout(false);
-            grpLightNorth.ResumeLayout(false);
+            pnlSaBan.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picIntersection).EndInit();
+            grpLightEast.ResumeLayout(false);
             grpLightWest.ResumeLayout(false);
             grpLightSouth.ResumeLayout(false);
-            grpLightEast.ResumeLayout(false);
+            grpLightNorth.ResumeLayout(false);
             grpControl.ResumeLayout(false);
             pnlManualGroup.ResumeLayout(false);
             grpConfig.ResumeLayout(false);
             grpConfig.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numGreenTime).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numYellowTime).EndInit();
             ((System.ComponentModel.ISupportInitialize)numRedTime).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numYellowTime).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numGreenTime).EndInit();
             grpLogs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvLogs).EndInit();
             ResumeLayout(false);
@@ -542,23 +612,22 @@
 
         private Panel pnlSaBan;
         private Label lblStatusTag;
-        private Label lblCountdown;
-        private Label label2;
-        private Label label1;
+        private Label lblNorthGreen;
+        private Label lblNorthRed;
         private GroupBox grpLightEast;
         private GroupBox grpLightWest;
         private GroupBox grpLightSouth;
         private GroupBox grpLightNorth;
-        private Label label9;
-        private Label label8;
-        private Label label7;
-        private Label label10;
-        private Label label11;
-        private Label label12;
-        private Label label4;
-        private Label label5;
-        private Label label6;
-        private Label label3;
+        private Label lblEastYellow;
+        private Label lblEastGreen;
+        private Label lblEastRed;
+        private Label lblWestYellow;
+        private Label lblWestGreen;
+        private Label lblWestRed;
+        private Label lblSouthYellow;
+        private Label lblSouthRed;
+        private Label lblSouthGreen;
+        private Label lblNorthYellow;
         private GroupBox grpControl;
         private Button btnModeEmergency;
         private Button btnModeManual;
@@ -582,5 +651,11 @@
         private DataGridViewTextBoxColumn colEvent;
         private DataGridViewTextBoxColumn colMode;
         private DataGridViewTextBoxColumn colDetail;
+        private System.Windows.Forms.Timer timer1;
+        private PictureBox picIntersection;
+        private Label lblCountSouth;
+        private Label lblCountEast;
+        private Label lblCountWest;
+        private Label lblCountNorth;
     }
 }
