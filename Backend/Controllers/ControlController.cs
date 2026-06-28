@@ -1,8 +1,11 @@
-﻿using Backend.Hubs;
+﻿using Backend.Data;
+using Backend.Hubs;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Backend.Controllers
@@ -12,31 +15,39 @@ namespace Backend.Controllers
     public class ControlController : ControllerBase
     {
         private readonly IHubContext<TrafficHub> _hub;
+        private readonly AppDbContext _context;
 
-        public ControlController(IHubContext<TrafficHub> hub)
+        public ControlController(
+            IHubContext<TrafficHub> hub,
+            AppDbContext context)
         {
             _hub = hub;
+            _context = context;
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostControl([FromBody] ControlRequest req)
+        public async Task<IActionResult> PostControl(
+            [FromBody] ControlRequest req)
         {
-            // TODO: Thành viên Backend bổ sung ghi log vào DB
-
-            // Gửi lệnh xuống Arduino thông qua Serial Bridge
             switch (req.Action)
             {
                 case "CHANGE_MODE":
-                    SerialBridgeService.Instance?.SendCommandToArduino("CHANGE_MODE", req.Mode);
-                    await _hub.Clients.All.SendAsync("ReceiveCommand", new
-                    {
-                        action = "CHANGE_MODE",
-                        mode = req.Mode
-                    });
+                    SerialBridgeService.Instance?.SendCommandToArduino(
+                        "CHANGE_MODE",
+                        req.Mode);
+
+                    await _hub.Clients.All.SendAsync(
+                        "ReceiveCommand",
+                        new
+                        {
+                            action = "CHANGE_MODE",
+                            mode = req.Mode
+                        });
                     break;
 
                 case "SET_LIGHT":
-                    if (req.Direction == null || req.Light == null)
+                    if (req.Direction == null ||
+                        req.Light == null)
                     {
                         return BadRequest(new
                         {
@@ -51,7 +62,8 @@ namespace Backend.Controllers
                     break;
 
                 case "RESTART":
-                    SerialBridgeService.Instance?.SendCommandToArduino("RESTART");
+                    SerialBridgeService.Instance?.SendCommandToArduino(
+                        "RESTART");
                     break;
 
                 case "TOGGLE_SYSTEM":
@@ -67,11 +79,27 @@ namespace Backend.Controllers
                     });
             }
 
+            await SaveControlLog(req);
+
             return Ok(new
             {
                 message = "Lệnh đã truyền thành công!",
                 executedAt = DateTime.UtcNow
             });
+        }
+
+        private async Task SaveControlLog(ControlRequest req)
+        {
+            var log = new ControlLog
+            {
+                ActionName = req.Action ?? "",
+                OldValue = "",
+                NewValue = JsonSerializer.Serialize(req),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ControlLogs.Add(log);
+            await _context.SaveChangesAsync();
         }
     }
 

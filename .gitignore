@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+.vs/
+bin/
+obj/
+=======
 # Visual Studio Cache and settings
 .vs/
 *.suo
@@ -10,3 +15,4 @@
 [Bb]in/
 [Oo]bj/
 [An]alyser/
+>>>>>>> f0799288a086e3e355963cbd20e74ba1962210a8

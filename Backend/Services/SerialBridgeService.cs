@@ -2,6 +2,7 @@
 using Backend.Hubs;
 using Backend.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -88,7 +89,8 @@ namespace Backend.Services
                 East = data[2],
                 West = data[3],
                 RemainingTime = int.TryParse(data[4], out int t) ? t : 0,
-                Mode = data[5],
+                Mode = data.Length > 5 ? data[5] : "AUTO",
+                Phase = data.Length > 6 ? data[6] : "UNKNOWN",
                 UpdatedAt = DateTime.UtcNow
             };
 
@@ -104,10 +106,37 @@ namespace Backend.Services
                     WestLight = statusDto.West,
                     RemainingTime = statusDto.RemainingTime,
                     Mode = statusDto.Mode,
+                    Phase = statusDto.Phase,
                     UpdatedAt = statusDto.UpdatedAt
                 };
 
-                db.TrafficStatuses.Add(liveStatus);
+                var current = await db.TrafficStatuses.FirstOrDefaultAsync();
+
+                if (current == null)
+                {
+                    db.TrafficStatuses.Add(liveStatus);
+                }
+                else
+                {
+                    current.NorthLight = liveStatus.NorthLight;
+                    current.SouthLight = liveStatus.SouthLight;
+                    current.EastLight = liveStatus.EastLight;
+                    current.WestLight = liveStatus.WestLight;
+                    current.RemainingTime = liveStatus.RemainingTime;
+                    current.Mode = liveStatus.Mode;
+                    current.Phase = liveStatus.Phase;
+                    current.UpdatedAt = DateTime.UtcNow;
+                }
+                db.TrafficLogs.Add(new TrafficLog
+                {
+                    PhaseName = statusDto.Phase,
+                    NorthLight = statusDto.North,
+                    SouthLight = statusDto.South,
+                    EastLight = statusDto.East,
+                    WestLight = statusDto.West,
+                    RemainingTime = statusDto.RemainingTime,
+                    CreatedAt = DateTime.UtcNow
+                });
                 await db.SaveChangesAsync();
             }
 
