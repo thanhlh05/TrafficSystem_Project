@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.37411.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{D0A26642-1CC6-4F4C-8BA6-3E7303635540}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficSystem_WinForm", "WinForm\TrafficSystem_WinForm.csproj", "{3A1AA0C4-36E5-EB8F-F990-98639B6147E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D0A26642-1CC6-4F4C-8BA6-3E7303635540}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0A26642-1CC6-4F4C-8BA6-3E7303635540}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0A26642-1CC6-4F4C-8BA6-3E7303635540}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A1AA0C4-36E5-EB8F-F990-98639B6147E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A1AA0C4-36E5-EB8F-F990-98639B6147E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A1AA0C4-36E5-EB8F-F990-98639B6147E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A1AA0C4-36E5-EB8F-F990-98639B6147E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

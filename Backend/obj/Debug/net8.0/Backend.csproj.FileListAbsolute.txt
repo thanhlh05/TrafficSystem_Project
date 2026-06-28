@@ -131,3 +131,4 @@ D:\Workspace\ioT\BTL\Backend\obj\Debug\net8.0\refint\Backend.dll
 D:\Workspace\ioT\BTL\Backend\obj\Debug\net8.0\Backend.pdb
 D:\Workspace\ioT\BTL\Backend\obj\Debug\net8.0\Backend.genruntimeconfig.cache
 D:\Workspace\ioT\BTL\Backend\obj\Debug\net8.0\ref\Backend.dll
+D:\Workspace\ioT\BTL\Backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
