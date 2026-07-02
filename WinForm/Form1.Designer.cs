@@ -402,6 +402,7 @@
             btnModeEmergency.TabIndex = 2;
             btnModeEmergency.Text = "KHẨN CẤP";
             btnModeEmergency.UseVisualStyleBackColor = false;
+            btnModeEmergency.Click += btnModeEmergency_Click;
             // 
             // btnModeManual
             // 
