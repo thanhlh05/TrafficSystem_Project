@@ -12,27 +12,29 @@ namespace Backend.Models
         public long Id { get; set; }
 
         [Column("north_light")]
-        public string? NorthLight { get; set; }
+        public string NorthLight { get; set; }
 
         [Column("south_light")]
-        public string? SouthLight { get; set; }
+        public string SouthLight { get; set; }
 
         [Column("east_light")]
-        public string? EastLight { get; set; }
+        public string EastLight { get; set; }
 
         [Column("west_light")]
-        public string? WestLight { get; set; }
+        public string WestLight { get; set; }
 
         [Column("remaining_time")]
         public int RemainingTime { get; set; }
 
         [Column("phase")]
-        public string? Phase { get; set; }
+        public string Phase { get; set; }
 
         [Column("mode")]
-        public string? Mode { get; set; }
+        public string Mode { get; set; }
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        
     }
 }
