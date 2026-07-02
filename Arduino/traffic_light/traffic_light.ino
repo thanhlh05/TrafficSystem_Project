@@ -1,3 +1,6 @@
+#include "LedControl.h"
+
+// ---------------- CẤU HÌNH PHẦN CỨNG ----------------
 #define N_GREEN 2
 #define N_YELLOW 3
 #define N_RED 4
@@ -11,11 +14,16 @@
 #define W_YELLOW 12
 #define W_RED 13
 
-// Trục 1: Bắc - Nam (Đèn 1)
+// Khởi tạo MAX7219: DIN=A0, CLK=A1, CS/LOAD=A2, Số lượng IC=1
+LedControl lc = LedControl(A0, A1, A2, 1); 
+
+// ---------------- BIẾN TOÀN CỤC ----------------
+int nsDisplayTime = 0;
+int ewDisplayTime = 0;
+
+// Thời gian mặc định
 int nsGreenTime = 25;
 int nsYellowTime = 3;
-
-// Trục 2: Đông - Tây (Đèn 2)
 int ewGreenTime = 33;
 int ewYellowTime = 3;
 
@@ -29,48 +37,62 @@ int remainingTime = 0;
 unsigned long lastTick = 0;
 unsigned long lastSend = 0;
 
+// ---------------- HÀM SETUP ----------------
 void setup() {
   Serial.begin(9600);
-  Serial.setTimeout(20); // THÊM DÒNG NÀY: Giới hạn thời gian chờ chống kẹt (lag) loop
-  
+  Serial.setTimeout(20); 
+
+  // Khởi tạo chân đèn giao thông
   int pins[] = {N_GREEN, N_YELLOW, N_RED, S_GREEN, S_YELLOW, S_RED, E_GREEN, E_YELLOW, E_RED, W_GREEN, W_YELLOW, W_RED};
   for (int i = 0; i < 12; i++) {
     pinMode(pins[i], OUTPUT);
     digitalWrite(pins[i], LOW);
   }
+
+  // Khởi tạo MAX7219 (Đánh thức IC, set độ sáng, xóa màn hình)
+  lc.shutdown(0, false); 
+  lc.setIntensity(0, 8); // Độ sáng từ 0 đến 15
+  lc.clearDisplay(0);
+
   setAutoPhase(0);
 }
 
+// ---------------- HÀM VÒNG LẶP CHÍNH ----------------
 void loop() {
   unsigned long now = millis();
 
-  // 1. Đọc lệnh từ Backend (Không gây blocking)
+  // 1. Đọc lệnh từ Backend
   if (Serial.available() > 0) {
     String cmd = Serial.readStringUntil('\n');
     cmd.trim();
     handleCommand(cmd);
 
-    sendStatus();       // Ép Arduino gửi trạng thái mới về WinForms ngay lập tức
-    lastSend = millis(); // Reset lại bộ đếm để không bị gửi trùng lặp
+    sendStatus();       
+    lastSend = millis(); 
   }
 
   // 2. Đếm ngược chu trình tự động
   if (systemOn && currentMode == 0 && now - lastTick >= 1000) {
     lastTick = now;
     remainingTime--;
+    
     if (remainingTime <= 0) {
       autoPhase = (autoPhase + 1) % 4;
       setAutoPhase(autoPhase);
     }
+    
+    // Cập nhật LED đếm ngược mỗi giây
+    syncDisplays(); 
   }
 
-  // 3. Đẩy thông tin trạng thái lên Web Server mỗi giây
+  // 3. Gửi thông tin trạng thái lên Web
   if (now - lastSend >= 1000) {
     lastSend = now;
     sendStatus();
   }
 }
 
+// ---------------- XỬ LÝ LỆNH TỪ SERIAL ----------------
 void handleCommand(String raw) {
   if (!raw.startsWith("CMD:")) return;
   
@@ -90,11 +112,11 @@ void handleCommand(String raw) {
   if (action == "CHANGE_MODE") {
     String mode = parts[2];
     if (mode == "AUTO") { currentMode = 0; setAutoPhase(0); }
-    else if (mode == "MANUAL") { currentMode = 1; }
+    else if (mode == "MANUAL") { currentMode = 1; syncDisplays(); }
     else if (mode == "EMERGENCY") { currentMode = 2; setEmergency(); }
   }
   else if (action == "SET_LIGHT") {
-    if (currentMode != 1) return; // Chỉ cho phép khi ở mode MANUAL
+    if (currentMode != 1) return; 
     String dir = parts[2];
     String color = parts[3];
     setOneLight(dir, color);
@@ -108,45 +130,24 @@ void handleCommand(String raw) {
     systemOn = (parts[2] == "ON");
     if (!systemOn) {
       allOff();
+      lc.clearDisplay(0); // Tắt màn hình khi tắt hệ thống
     } else {
-      // Đã fix lỗi mất trạng thái Mode khi bật lại hệ thống
       if (currentMode == 0) setAutoPhase(autoPhase);
       else if (currentMode == 2) setEmergency();
-      else applyLights(); 
+      else { applyLights(); syncDisplays(); }
     }
   }
   else if (action == "CONFIG") {
     String param = parts[2];
     int val = parts[3].toInt();
-    // Cập nhật cấu hình độc lập cho từng trục giao thông
     if (param == "NS_GREEN") nsGreenTime = val;
     else if (param == "NS_YELLOW") nsYellowTime = val;
     else if (param == "EW_GREEN") ewGreenTime = val;
     else if (param == "EW_YELLOW") ewYellowTime = val;
   }
-  else if (raw.startsWith("CMD:SET_TIME")) {
-    int firstColon = raw.indexOf(':');
-    int secondColon = raw.indexOf(':', firstColon + 1);
-    int thirdColon = raw.indexOf(':', secondColon + 1);
-
-    if (secondColon > 0 && thirdColon > 0) {
-      // Tách chuỗi lấy số giây Xanh và Vàng
-      String greenStr = raw.substring(secondColon + 1, thirdColon);
-      String yellowStr = raw.substring(thirdColon + 1);
-
-      // Ép kiểu sang số nguyên và cập nhật vào biến toàn cục của Arduino
-      nsGreenTime = greenStr.toInt();
-      ewGreenTime = greenStr.toInt();
-      nsYellowTime = yellowStr.toInt();
-      ewYellowTime = yellowStr.toInt();
-
-      // Ép Arduino gửi trạng thái mới lên màn hình ngay lập tức để đồng bộ
-      sendStatus();
-      lastSend = millis();
-    }
-  }
 }
 
+// ---------------- GỬI TRẠNG THÁI ----------------
 void sendStatus() {
   if (!systemOn) {
     Serial.println("STATUS:OFF,OFF,OFF,OFF,0,OFF");
@@ -171,6 +172,7 @@ String colorStr(int c) {
   return "RED";
 }
 
+// ---------------- ĐIỀU KHIỂN ĐÈN VÀ PHA ----------------
 void applyLights() {
   if (!systemOn) return;
   digitalWrite(N_GREEN, lightN == 1 ? HIGH : LOW);
@@ -193,30 +195,32 @@ void applyLights() {
 void setAutoPhase(int phase) {
   autoPhase = phase;
   switch (phase) {
-    case 0: // Bắc - Nam Xanh (25s), Đông - Tây Đỏ (36s)
+    case 0: // Bắc - Nam Xanh, Đông - Tây Đỏ
       lightN = 1; lightS = 1; lightE = 0; lightW = 0;
       remainingTime = nsGreenTime;
       break;
-    case 1: // Bắc - Nam Vàng (3s), Đông - Tây Đỏ
+    case 1: // Bắc - Nam Vàng, Đông - Tây Đỏ
       lightN = 2; lightS = 2; lightE = 0; lightW = 0;
       remainingTime = nsYellowTime;
       break;
-    case 2: // Đông - Tây Xanh (33s), Bắc - Nam Đỏ (28s)
+    case 2: // Đông - Tây Xanh, Bắc - Nam Đỏ
       lightN = 0; lightS = 0; lightE = 1; lightW = 1;
       remainingTime = ewGreenTime;
       break;
-    case 3: // Đông - Tây Vàng (3s), Bắc - Nam Đỏ
+    case 3: // Đông - Tây Vàng, Bắc - Nam Đỏ
       lightN = 0; lightS = 0; lightE = 2; lightW = 2;
       remainingTime = ewYellowTime;
       break;
   }
   applyLights();
+  syncDisplays(); // Cập nhật màn hình ngay lập tức khi đổi pha
 }
 
 void setEmergency() {
   lightN = 0; lightS = 0; lightE = 0; lightW = 0; 
   remainingTime = 0;
   applyLights();
+  syncDisplays(); // Cập nhật màn hình chớp nháy số 0
 }
 
 void allOff() {
@@ -225,9 +229,7 @@ void allOff() {
 }
 
 void setOneLight(String dir, String color) {
-  int c = 0; // Mặc định là Đỏ (0)
-  
-  // Hỗ trợ nhận diện cả CHỮ (từ test Serial) và SỐ (từ WinForms C#)
+  int c = 0; 
   if (color == "GREEN" || color == "3") c = 1;
   else if (color == "YELLOW" || color == "2") c = 2;
   else if (color == "RED" || color == "1") c = 0;
@@ -238,4 +240,65 @@ void setOneLight(String dir, String color) {
   else if (dir == "WEST") lightW = c;
   
   applyLights();
+}
+
+// ---------------- HÀM ĐỒNG BỘ LOGIC LED 7 ĐOẠN ----------------
+void syncDisplays() {
+  if (!systemOn) return;
+
+  if (currentMode == 1) {
+    // Chế độ thủ công: Hiện "--" ở 4 hướng
+    updateCountdownDisplays(-1, -1);
+  } 
+  else if (currentMode == 2) {
+    // Chế độ khẩn cấp: Hiện "00" ở 4 hướng
+    updateCountdownDisplays(0, 0);
+  } 
+  else if (currentMode == 0) {
+    // Chế độ tự động: Tính toán chuẩn thời gian cho từng trục
+    if (autoPhase == 0) {
+      nsDisplayTime = remainingTime;
+      ewDisplayTime = remainingTime + nsYellowTime; 
+    } 
+    else if (autoPhase == 1) {
+      nsDisplayTime = remainingTime;
+      ewDisplayTime = remainingTime; 
+    } 
+    else if (autoPhase == 2) {
+      ewDisplayTime = remainingTime;
+      nsDisplayTime = remainingTime + ewYellowTime; 
+    } 
+    else if (autoPhase == 3) {
+      ewDisplayTime = remainingTime;
+      nsDisplayTime = remainingTime; 
+    }
+    updateCountdownDisplays(nsDisplayTime, ewDisplayTime);
+  }
+}
+
+// ---------------- HÀM HIỂN THỊ XUỐNG MAX7219 ----------------
+void updateCountdownDisplays(int nsValue, int ewValue) {
+  if (nsValue >= 0) {
+    lc.setDigit(0, 0, nsValue % 10, false);       // Hàng đơn vị Nam
+    lc.setDigit(0, 1, (nsValue / 10) % 10, false); // Hàng chục Nam
+    lc.setDigit(0, 2, nsValue % 10, false);       // Hàng đơn vị Bắc
+    lc.setDigit(0, 3, (nsValue / 10) % 10, false); // Hàng chục Bắc
+  } else {
+    lc.setRow(0, 0, 0b00000001); // Dấu "-"
+    lc.setRow(0, 1, 0b00000001); 
+    lc.setRow(0, 2, 0b00000001); 
+    lc.setRow(0, 3, 0b00000001); 
+  }
+
+  if (ewValue >= 0) {
+    lc.setDigit(0, 4, ewValue % 10, false);       // Hàng đơn vị Tây
+    lc.setDigit(0, 5, (ewValue / 10) % 10, false); // Hàng chục Tây
+    lc.setDigit(0, 6, ewValue % 10, false);       // Hàng đơn vị Đông
+    lc.setDigit(0, 7, (ewValue / 10) % 10, false); // Hàng chục Đông
+  } else {
+    lc.setRow(0, 4, 0b00000001); // Dấu "-"
+    lc.setRow(0, 5, 0b00000001); 
+    lc.setRow(0, 6, 0b00000001); 
+    lc.setRow(0, 7, 0b00000001); 
+  }
 }
