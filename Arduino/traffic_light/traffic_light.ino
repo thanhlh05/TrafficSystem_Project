@@ -31,6 +31,8 @@ unsigned long lastSend = 0;
 
 void setup() {
   Serial.begin(9600);
+  Serial.setTimeout(20); // THÊM DÒNG NÀY: Giới hạn thời gian chờ chống kẹt (lag) loop
+  
   int pins[] = {N_GREEN, N_YELLOW, N_RED, S_GREEN, S_YELLOW, S_RED, E_GREEN, E_YELLOW, E_RED, W_GREEN, W_YELLOW, W_RED};
   for (int i = 0; i < 12; i++) {
     pinMode(pins[i], OUTPUT);
@@ -47,6 +49,9 @@ void loop() {
     String cmd = Serial.readStringUntil('\n');
     cmd.trim();
     handleCommand(cmd);
+
+    sendStatus();       // Ép Arduino gửi trạng thái mới về WinForms ngay lập tức
+    lastSend = millis(); // Reset lại bộ đếm để không bị gửi trùng lặp
   }
 
   // 2. Đếm ngược chu trình tự động
@@ -118,6 +123,27 @@ void handleCommand(String raw) {
     else if (param == "NS_YELLOW") nsYellowTime = val;
     else if (param == "EW_GREEN") ewGreenTime = val;
     else if (param == "EW_YELLOW") ewYellowTime = val;
+  }
+  else if (raw.startsWith("CMD:SET_TIME")) {
+    int firstColon = raw.indexOf(':');
+    int secondColon = raw.indexOf(':', firstColon + 1);
+    int thirdColon = raw.indexOf(':', secondColon + 1);
+
+    if (secondColon > 0 && thirdColon > 0) {
+      // Tách chuỗi lấy số giây Xanh và Vàng
+      String greenStr = raw.substring(secondColon + 1, thirdColon);
+      String yellowStr = raw.substring(thirdColon + 1);
+
+      // Ép kiểu sang số nguyên và cập nhật vào biến toàn cục của Arduino
+      nsGreenTime = greenStr.toInt();
+      ewGreenTime = greenStr.toInt();
+      nsYellowTime = yellowStr.toInt();
+      ewYellowTime = yellowStr.toInt();
+
+      // Ép Arduino gửi trạng thái mới lên màn hình ngay lập tức để đồng bộ
+      sendStatus();
+      lastSend = millis();
+    }
   }
 }
 
@@ -199,13 +225,17 @@ void allOff() {
 }
 
 void setOneLight(String dir, String color) {
-  int c = 0;
-  if (color == "GREEN") c = 1;
-  else if (color == "YELLOW") c = 2;
+  int c = 0; // Mặc định là Đỏ (0)
+  
+  // Hỗ trợ nhận diện cả CHỮ (từ test Serial) và SỐ (từ WinForms C#)
+  if (color == "GREEN" || color == "3") c = 1;
+  else if (color == "YELLOW" || color == "2") c = 2;
+  else if (color == "RED" || color == "1") c = 0;
 
   if (dir == "NORTH") lightN = c;
   else if (dir == "SOUTH") lightS = c;
   else if (dir == "EAST") lightE = c;
   else if (dir == "WEST") lightW = c;
+  
   applyLights();
 }

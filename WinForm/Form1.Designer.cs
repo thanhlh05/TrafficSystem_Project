@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             pnlSaBan = new Panel();
             lblCountSouth = new Label();
             lblCountEast = new Label();
@@ -63,9 +62,9 @@
             btnModeAuto = new Button();
             grpConfig = new GroupBox();
             btnSaveConfig = new Button();
-            numRedTime = new NumericUpDown();
-            numYellowTime = new NumericUpDown();
-            numGreenTime = new NumericUpDown();
+            nudRed = new NumericUpDown();
+            nudYellow = new NumericUpDown();
+            nudGreen = new NumericUpDown();
             label15 = new Label();
             label14 = new Label();
             label13 = new Label();
@@ -75,7 +74,6 @@
             colEvent = new DataGridViewTextBoxColumn();
             colMode = new DataGridViewTextBoxColumn();
             colDetail = new DataGridViewTextBoxColumn();
-            timer1 = new System.Windows.Forms.Timer(components);
             pnlSaBan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picIntersection).BeginInit();
             grpLightEast.SuspendLayout();
@@ -85,9 +83,9 @@
             grpControl.SuspendLayout();
             pnlManualGroup.SuspendLayout();
             grpConfig.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numRedTime).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numYellowTime).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numGreenTime).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nudRed).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nudYellow).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nudGreen).BeginInit();
             grpLogs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLogs).BeginInit();
             SuspendLayout();
@@ -117,9 +115,9 @@
             lblCountSouth.ForeColor = Color.DarkSlateGray;
             lblCountSouth.Location = new Point(321, 397);
             lblCountSouth.Name = "lblCountSouth";
-            lblCountSouth.Size = new Size(79, 31);
+            lblCountSouth.Size = new Size(27, 31);
             lblCountSouth.TabIndex = 9;
-            lblCountSouth.Text = "label1";
+            lblCountSouth.Text = "0";
             // 
             // lblCountEast
             // 
@@ -128,9 +126,9 @@
             lblCountEast.ForeColor = Color.DarkSlateGray;
             lblCountEast.Location = new Point(420, 273);
             lblCountEast.Name = "lblCountEast";
-            lblCountEast.Size = new Size(79, 31);
+            lblCountEast.Size = new Size(27, 31);
             lblCountEast.TabIndex = 8;
-            lblCountEast.Text = "label1";
+            lblCountEast.Text = "0";
             // 
             // lblCountWest
             // 
@@ -139,9 +137,9 @@
             lblCountWest.ForeColor = Color.DarkSlateGray;
             lblCountWest.Location = new Point(58, 273);
             lblCountWest.Name = "lblCountWest";
-            lblCountWest.Size = new Size(79, 31);
+            lblCountWest.Size = new Size(27, 31);
             lblCountWest.TabIndex = 7;
-            lblCountWest.Text = "label1";
+            lblCountWest.Text = "0";
             // 
             // lblCountNorth
             // 
@@ -150,9 +148,9 @@
             lblCountNorth.ForeColor = Color.DarkSlateGray;
             lblCountNorth.Location = new Point(321, 86);
             lblCountNorth.Name = "lblCountNorth";
-            lblCountNorth.Size = new Size(79, 31);
+            lblCountNorth.Size = new Size(27, 31);
             lblCountNorth.TabIndex = 6;
-            lblCountNorth.Text = "label1";
+            lblCountNorth.Text = "0";
             // 
             // picIntersection
             // 
@@ -174,7 +172,7 @@
             grpLightEast.Size = new Size(145, 85);
             grpLightEast.TabIndex = 4;
             grpLightEast.TabStop = false;
-            grpLightEast.Text = "HƯỚNG ĐÔNG";
+            grpLightEast.Text = "ĐÔNG";
             // 
             // lblEastYellow
             // 
@@ -210,7 +208,7 @@
             grpLightWest.Size = new Size(120, 85);
             grpLightWest.TabIndex = 3;
             grpLightWest.TabStop = false;
-            grpLightWest.Text = "HƯỚNG TÂY";
+            grpLightWest.Text = "TÂY";
             // 
             // lblWestYellow
             // 
@@ -246,7 +244,7 @@
             grpLightSouth.Size = new Size(80, 130);
             grpLightSouth.TabIndex = 3;
             grpLightSouth.TabStop = false;
-            grpLightSouth.Text = "HƯỚNG NAM";
+            grpLightSouth.Text = "NAM";
             // 
             // lblSouthYellow
             // 
@@ -282,7 +280,7 @@
             grpLightNorth.Size = new Size(80, 130);
             grpLightNorth.TabIndex = 2;
             grpLightNorth.TabStop = false;
-            grpLightNorth.Text = "HƯỚNG BẮC";
+            grpLightNorth.Text = "BẮC";
             // 
             // lblNorthYellow
             // 
@@ -434,9 +432,9 @@
             // grpConfig
             // 
             grpConfig.Controls.Add(btnSaveConfig);
-            grpConfig.Controls.Add(numRedTime);
-            grpConfig.Controls.Add(numYellowTime);
-            grpConfig.Controls.Add(numGreenTime);
+            grpConfig.Controls.Add(nudRed);
+            grpConfig.Controls.Add(nudYellow);
+            grpConfig.Controls.Add(nudGreen);
             grpConfig.Controls.Add(label15);
             grpConfig.Controls.Add(label14);
             grpConfig.Controls.Add(label13);
@@ -460,35 +458,35 @@
             btnSaveConfig.UseVisualStyleBackColor = false;
             btnSaveConfig.Click += btnSaveConfig_Click;
             // 
-            // numRedTime
+            // nudRed
             // 
-            numRedTime.Location = new Point(170, 100);
-            numRedTime.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
-            numRedTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numRedTime.Name = "numRedTime";
-            numRedTime.Size = new Size(150, 30);
-            numRedTime.TabIndex = 5;
-            numRedTime.Value = new decimal(new int[] { 28, 0, 0, 0 });
+            nudRed.Location = new Point(170, 100);
+            nudRed.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
+            nudRed.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudRed.Name = "nudRed";
+            nudRed.Size = new Size(150, 30);
+            nudRed.TabIndex = 5;
+            nudRed.Value = new decimal(new int[] { 28, 0, 0, 0 });
             // 
-            // numYellowTime
+            // nudYellow
             // 
-            numYellowTime.Location = new Point(170, 60);
-            numYellowTime.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
-            numYellowTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numYellowTime.Name = "numYellowTime";
-            numYellowTime.Size = new Size(150, 30);
-            numYellowTime.TabIndex = 4;
-            numYellowTime.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            nudYellow.Location = new Point(170, 60);
+            nudYellow.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            nudYellow.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudYellow.Name = "nudYellow";
+            nudYellow.Size = new Size(150, 30);
+            nudYellow.TabIndex = 4;
+            nudYellow.Value = new decimal(new int[] { 3, 0, 0, 0 });
             // 
-            // numGreenTime
+            // nudGreen
             // 
-            numGreenTime.Location = new Point(170, 20);
-            numGreenTime.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
-            numGreenTime.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numGreenTime.Name = "numGreenTime";
-            numGreenTime.Size = new Size(150, 30);
-            numGreenTime.TabIndex = 3;
-            numGreenTime.Value = new decimal(new int[] { 25, 0, 0, 0 });
+            nudGreen.Location = new Point(170, 20);
+            nudGreen.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
+            nudGreen.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudGreen.Name = "nudGreen";
+            nudGreen.Size = new Size(150, 30);
+            nudGreen.TabIndex = 3;
+            nudGreen.Value = new decimal(new int[] { 25, 0, 0, 0 });
             // 
             // label15
             // 
@@ -567,12 +565,6 @@
             colDetail.MinimumWidth = 6;
             colDetail.Name = "colDetail";
             // 
-            // timer1
-            // 
-            timer1.Enabled = true;
-            timer1.Interval = 1000;
-            timer1.Tick += timer1_Tick;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 23F);
@@ -600,9 +592,9 @@
             pnlManualGroup.ResumeLayout(false);
             grpConfig.ResumeLayout(false);
             grpConfig.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numRedTime).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numYellowTime).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numGreenTime).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nudRed).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nudYellow).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nudGreen).EndInit();
             grpLogs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvLogs).EndInit();
             ResumeLayout(false);
@@ -641,9 +633,9 @@
         private Label label15;
         private Label label14;
         private Label label13;
-        private NumericUpDown numRedTime;
-        private NumericUpDown numYellowTime;
-        private NumericUpDown numGreenTime;
+        private NumericUpDown nudRed;
+        private NumericUpDown nudYellow;
+        private NumericUpDown nudGreen;
         private Button btnSaveConfig;
         private GroupBox grpLogs;
         private DataGridView dgvLogs;
@@ -651,7 +643,6 @@
         private DataGridViewTextBoxColumn colEvent;
         private DataGridViewTextBoxColumn colMode;
         private DataGridViewTextBoxColumn colDetail;
-        private System.Windows.Forms.Timer timer1;
         private PictureBox picIntersection;
         private Label lblCountSouth;
         private Label lblCountEast;

@@ -100,10 +100,10 @@ namespace Backend.Services
 
                 var liveStatus = new TrafficStatus
                 {
-                    NorthLight = statusDto.North,
-                    SouthLight = statusDto.South,
-                    EastLight = statusDto.East,
-                    WestLight = statusDto.West,
+                    NorthLight = statusDto.North?.ToUpper(),
+                    SouthLight = statusDto.South?.ToUpper(),
+                    EastLight = statusDto.East?.ToUpper(),
+                    WestLight = statusDto.West?.ToUpper(),
                     RemainingTime = statusDto.RemainingTime,
                     Mode = statusDto.Mode,
                     Phase = statusDto.Phase,
@@ -160,6 +160,18 @@ namespace Backend.Services
 
             _port.WriteLine(cmd);
             _logger.LogInformation($"Sent to Arduino: {cmd}");
+        }
+        private int ConvertLightTextToNo(string lightText)
+        {
+            if (string.IsNullOrEmpty(lightText)) return 0; // Mặc định là Đỏ (0) nếu null
+
+            switch (lightText.ToUpper())
+            {
+                case "RED": return 0;
+                case "GREEN": return 1;
+                case "YELLOW": return 2;
+                default: return 0;
+            }
         }
     }
 }
