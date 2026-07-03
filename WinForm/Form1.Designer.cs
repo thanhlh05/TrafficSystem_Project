@@ -92,6 +92,7 @@
             // 
             // pnlSaBan
             // 
+            pnlSaBan.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlSaBan.BackColor = Color.White;
             pnlSaBan.Controls.Add(lblCountSouth);
             pnlSaBan.Controls.Add(lblCountEast);
@@ -320,6 +321,7 @@
             // 
             // grpControl
             // 
+            grpControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpControl.Controls.Add(pnlManualGroup);
             grpControl.Controls.Add(btnModeEmergency);
             grpControl.Controls.Add(btnModeManual);
@@ -432,6 +434,7 @@
             // 
             // grpConfig
             // 
+            grpConfig.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpConfig.Controls.Add(btnSaveConfig);
             grpConfig.Controls.Add(nudRed);
             grpConfig.Controls.Add(nudYellow);
@@ -518,17 +521,18 @@
             // 
             // grpLogs
             // 
+            grpLogs.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpLogs.Controls.Add(dgvLogs);
             grpLogs.Location = new Point(15, 510);
             grpLogs.Name = "grpLogs";
-            grpLogs.Size = new Size(955, 135);
+            grpLogs.Size = new Size(955, 231);
             grpLogs.TabIndex = 3;
             grpLogs.TabStop = false;
             grpLogs.Text = "LỊCH SỬ HOẠT ĐỘNG HỆ THỐNG";
             // 
             // dgvLogs
             // 
-            dgvLogs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvLogs.AllowUserToAddRows = false;
             dgvLogs.BackgroundColor = Color.White;
             dgvLogs.BorderStyle = BorderStyle.None;
             dgvLogs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -539,39 +543,47 @@
             dgvLogs.Name = "dgvLogs";
             dgvLogs.RowHeadersVisible = false;
             dgvLogs.RowHeadersWidth = 51;
-            dgvLogs.Size = new Size(949, 106);
+            dgvLogs.Size = new Size(949, 202);
             dgvLogs.TabIndex = 0;
             // 
             // colTime
             // 
+            colTime.FillWeight = 361.4973F;
             colTime.HeaderText = "Thời gian";
             colTime.MinimumWidth = 6;
             colTime.Name = "colTime";
+            colTime.Width = 130;
             // 
             // colEvent
             // 
+            colEvent.FillWeight = 12.8342285F;
             colEvent.HeaderText = "Sự kiện / Pha";
             colEvent.MinimumWidth = 6;
             colEvent.Name = "colEvent";
+            colEvent.Width = 180;
             // 
             // colMode
             // 
+            colMode.FillWeight = 12.8342285F;
             colMode.HeaderText = "Chế độ";
             colMode.MinimumWidth = 6;
             colMode.Name = "colMode";
+            colMode.Width = 237;
             // 
             // colDetail
             // 
+            colDetail.FillWeight = 12.8342285F;
             colDetail.HeaderText = "Chi tiết lệnh";
             colDetail.MinimumWidth = 6;
             colDetail.Name = "colDetail";
+            colDetail.Width = 401;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(244, 246, 249);
-            ClientSize = new Size(982, 653);
+            ClientSize = new Size(982, 753);
             Controls.Add(grpLogs);
             Controls.Add(grpConfig);
             Controls.Add(grpControl);
@@ -640,14 +652,14 @@
         private Button btnSaveConfig;
         private GroupBox grpLogs;
         private DataGridView dgvLogs;
-        private DataGridViewTextBoxColumn colTime;
-        private DataGridViewTextBoxColumn colEvent;
-        private DataGridViewTextBoxColumn colMode;
-        private DataGridViewTextBoxColumn colDetail;
         private PictureBox picIntersection;
         private Label lblCountSouth;
         private Label lblCountEast;
         private Label lblCountWest;
         private Label lblCountNorth;
+        private DataGridViewTextBoxColumn colTime;
+        private DataGridViewTextBoxColumn colEvent;
+        private DataGridViewTextBoxColumn colMode;
+        private DataGridViewTextBoxColumn colDetail;
     }
 }

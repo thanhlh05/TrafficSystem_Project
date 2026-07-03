@@ -3,21 +3,28 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Http;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE ĐÚNG CỦA DỰ ÁN BẠN NẾU BỊ BÁO LỖI
+namespace TrafficSystem_WinForm
 {
     public partial class Form1 : Form
     {
         // --- 1. CÁC BIẾN HỆ THỐNG & KẾT NỐI ---
         private HubConnection _hubConnection;
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private readonly string _baseUrl = "http://localhost:5010";
+
         private string currentMode = "AUTO";
         private int greenTime = 25;
         private int yellowTime = 3;
         private int redTime = 28;
+
+        // BIẾN LƯU TRẠNG THÁI CŨ ĐỂ THEO DÕI LỊCH SỬ THAY ĐỔI PHA ĐÈN
+        private string _lastMode = "";
+        private string _lastNorthLight = "";
+        private string _lastEastLight = "";
 
         public Form1()
         {
@@ -27,34 +34,64 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
         // --- 2. SỰ KIỆN PHÁT SINH KHI FORM KHỞI CHẠY ---
         private async void Form1_Load(object sender, EventArgs e)
         {
-
-            // Cấu hình và khởi chạy kết nối SignalR
             SetupSignalR();
+
+
+            // Ghi log khởi động
+            AddLog("Hệ thống", "KHỞI ĐỘNG", "Bắt đầu kết nối phần mềm giám sát.");
 
             try
             {
                 await _hubConnection.StartAsync();
+                AddLog("Mạng", "KẾT NỐI", "Đã kết nối SignalR thành công.");
                 MessageBox.Show("Đã kết nối SignalR thành công tới trung tâm điều khiển Backend!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                AddLog("Mạng", "LỖI", $"Không thể kết nối SignalR: {ex.Message}");
                 MessageBox.Show("Chưa thể kết nối tới Backend. Vui lòng đảm bảo Backend API đang chạy!\nChi tiết: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        // --- 3. CẤU HÌNH KẾT NỐI TRUYỀN DỮ LIỆU SIGNALR ---
+        // --- 3. HÀM THÊM LỊCH SỬ VÀO DATAGRIDVIEW ---
+        // Đẩy thông tin vào dgvLogs. Hàm này an toàn với đa luồng (Thread-safe)
+        private void AddLog(string eventPhase, string mode, string details)
+        {
+            // Đảm bảo thao tác trên UI Thread
+            if (dgvLogs.InvokeRequired)
+            {
+                dgvLogs.Invoke(new Action(() => AddLog(eventPhase, mode, details)));
+                return;
+            }
+
+            try
+            {
+                // Lấy thời gian hiện tại
+                string timeStr = DateTime.Now.ToString("HH:mm:ss dd/MM");
+
+                // Thêm một dòng mới lên đầu danh sách (Index = 0)
+                // Thứ tự cột: Thời gian, Sự kiện/Pha, Chế độ, Chi tiết lệnh
+                dgvLogs.Rows.Insert(0, timeStr, eventPhase, mode, details);
+
+                // Giữ lại tối đa 100 dòng gần nhất để tránh phần mềm bị nặng và lag
+                if (dgvLogs.Rows.Count > 100)
+                {
+                    dgvLogs.Rows.RemoveAt(dgvLogs.Rows.Count - 1);
+                }
+            }
+            catch { /* Bỏ qua nếu DataGridView chưa khởi tạo kịp */ }
+        }
+
+        // --- 4. CẤU HÌNH KẾT NỐI TRUYỀN DỮ LIỆU SIGNALR ---
         private void SetupSignalR()
         {
-            // Khởi tạo kết nối tới Hub của Backend (Thay đổi Port 5000 cho đúng với Port Backend của bạn B)
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5010/hubs/traffic")
+                .WithUrl($"{_baseUrl}/hubs/traffic")
                 .WithAutomaticReconnect()
                 .Build();
 
-            // Lắng nghe cổng sự kiện "ReceiveStatus" trả về từ Server
             _hubConnection.On<TrafficStatus>("ReceiveStatus", (status) =>
             {
-                // Bắt buộc dùng Invoke để đẩy dữ liệu từ luồng ngầm (Background Thread) về luồng giao diện chính (UI Thread)
                 Invoke(() =>
                 {
                     UpdateRealTimeUI(status);
@@ -62,19 +99,38 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
             });
         }
 
-        // --- 4. HÀM CẬP NHẬT GIAO DIỆN REAL-TIME TỪ DỮ LIỆU THẬT ---
+        // --- 5. HÀM CẬP NHẬT GIAO DIỆN REAL-TIME TỪ DỮ LIỆU THẬT ---
         private void UpdateRealTimeUI(TrafficStatus status)
         {
             try
             {
                 if (status == null) return;
 
-                // Debug dữ liệu nhận từ Arduino
-                System.Diagnostics.Debug.WriteLine(
-                    $"---> TEST DỮ LIỆU: Bắc [{status.NorthLight}] | Đông [{status.EastLight}] | Giây: {status.RemainingTime}");
-
-                // Cập nhật chế độ hiện tại
                 currentMode = status.Mode?.ToUpper();
+
+                // GHI LOG: Phát hiện chuyển chế độ từ Backend
+                if (!string.IsNullOrEmpty(currentMode) && currentMode != _lastMode)
+                {
+                    if (_lastMode != "") // Bỏ qua lần load dữ liệu đầu tiên
+                    {
+                        AddLog("Chuyển chế độ", currentMode, $"Hệ thống chuyển từ {_lastMode} sang {currentMode}");
+                    }
+                    _lastMode = currentMode;
+                }
+
+                // GHI LOG: Phát hiện chuyển pha đèn (Chỉ ở chế độ AUTO để tránh spam quá nhiều)
+                if (currentMode == "AUTO")
+                {
+                    if (status.NorthLight != _lastNorthLight || status.EastLight != _lastEastLight)
+                    {
+                        if (!string.IsNullOrEmpty(status.NorthLight) && !string.IsNullOrEmpty(status.EastLight))
+                        {
+                            AddLog("Chuyển pha", "AUTO", $"Đèn Bắc/Nam: {status.NorthLight} | Đèn Đông/Tây: {status.EastLight}");
+                            _lastNorthLight = status.NorthLight;
+                            _lastEastLight = status.EastLight;
+                        }
+                    }
+                }
 
                 switch (currentMode)
                 {
@@ -82,74 +138,54 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
                         lblStatusTag.Text = "CHẾ ĐỘ: TỰ ĐỘNG";
                         lblStatusTag.BackColor = SystemColors.ActiveCaption;
                         break;
-
                     case "MANUAL":
                         lblStatusTag.Text = "CHẾ ĐỘ: THỦ CÔNG";
                         lblStatusTag.BackColor = Color.LightPink;
                         break;
-
                     case "EMERGENCY":
                         lblStatusTag.Text = "CHẾ ĐỘ: KHẨN CẤP";
                         lblStatusTag.BackColor = Color.OrangeRed;
                         break;
-
                     default:
                         lblStatusTag.Text = "CHẾ ĐỘ: KHÔNG XÁC ĐỊNH";
                         lblStatusTag.BackColor = Color.Gray;
                         break;
                 }
 
-                // Chỉ cho phép điều khiển tay khi ở MANUAL
                 pnlManualGroup.Enabled = (currentMode == "MANUAL");
-
-                // ===========================
-                // Cập nhật thời gian đếm ngược
-                // ===========================
 
                 int currentTime = status.RemainingTime;
                 int timeNS = currentTime;
                 int timeEW = currentTime;
 
-                // Thời gian đèn vàng (nếu sau này có API cấu hình thì thay bằng giá trị cấu hình)
-                int yellowTime = 3;
-
                 if (currentMode == "AUTO")
                 {
                     if (status.NorthLight == "GREEN")
                     {
-                        // Bắc - Nam xanh
                         timeNS = currentTime;
                         timeEW = currentTime + yellowTime;
                     }
                     else if (status.EastLight == "GREEN")
                     {
-                        // Đông - Tây xanh
                         timeEW = currentTime;
                         timeNS = currentTime + yellowTime;
                     }
                     else if (status.NorthLight == "YELLOW")
                     {
-                        // Bắc - Nam vàng
                         timeNS = currentTime;
                         timeEW = currentTime;
                     }
                     else if (status.EastLight == "YELLOW")
                     {
-                        // Đông - Tây vàng
                         timeNS = currentTime;
                         timeEW = currentTime;
                     }
                 }
 
-                // Hiển thị số giây cho từng trục
                 lblCountNorth.Text = timeNS.ToString();
                 lblCountSouth.Text = timeNS.ToString();
                 lblCountEast.Text = timeEW.ToString();
                 lblCountWest.Text = timeEW.ToString();
-
-                // ===========================
-                // Cập nhật màu đèn
-                // ===========================
 
                 SetLightColor(lblNorthRed, lblNorthYellow, lblNorthGreen, status.NorthLight);
                 SetLightColor(lblSouthRed, lblSouthYellow, lblSouthGreen, status.SouthLight);
@@ -158,161 +194,93 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Bắt được lỗi ngầm: {ex.Message}",
-                    "Lỗi Giao Diện",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                System.Diagnostics.Debug.WriteLine("Lỗi UpdateUI: " + ex.Message);
             }
         }
 
         private void SetLightColor(Label redLabel, Label yellowLabel, Label greenLabel, string colorStatus)
         {
-            // 1. Mặc định tắt đèn về xám
             redLabel.BackColor = Color.LightGray;
             yellowLabel.BackColor = Color.LightGray;
             greenLabel.BackColor = Color.LightGray;
 
-            // 2. Nếu dữ liệu rỗng hoặc null thì dừng luôn
             if (string.IsNullOrWhiteSpace(colorStatus)) return;
 
-            // 3. Dọn dẹp khoảng trắng dư thừa và in hoa toàn bộ
             string normalizedColor = colorStatus.Trim().ToUpper();
 
-            // 4. Bọc lót cả trường hợp nhận chữ (RED) lẫn nhận chuỗi số ("0")
             switch (normalizedColor)
             {
                 case "RED":
-                case "0":
-                    redLabel.BackColor = Color.Red;
-                    break;
-
+                case "0": redLabel.BackColor = Color.Red; break;
                 case "GREEN":
-                case "1":
-                    greenLabel.BackColor = Color.Green;
-                    break;
-
+                case "1": greenLabel.BackColor = Color.Green; break;
                 case "YELLOW":
-                case "2":
-                    yellowLabel.BackColor = Color.Yellow;
-                    break;
+                case "2": yellowLabel.BackColor = Color.Yellow; break;
             }
         }
 
-        // Hàm này giúp WinForms ra lệnh đổi màu cho 1 hướng cụ thể
         private async Task SendLightCommand(string direction, string colorValue)
         {
             try
             {
-                var requestData = new
-                {
-                    Action = "SET_LIGHT",
-                    Direction = direction,
-                    Light = colorValue // Gửi số dạng chuỗi: "1" (Đỏ), "2" (Vàng), "3" (Xanh)
-                };
-
-                string jsonPayload = System.Text.Json.JsonSerializer.Serialize(requestData);
+                var requestData = new { Action = "SET_LIGHT", Direction = direction, Light = colorValue };
+                string jsonPayload = JsonSerializer.Serialize(requestData);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                using (HttpClient client = new HttpClient())
-                {
-                    // Sửa port 5010 cho khớp với máy bạn
-                    await client.PostAsync("http://localhost:5010/api/control", content);
-                }
+                await _httpClient.PostAsync($"{_baseUrl}/api/control", content);
             }
-            catch { /* Tạm ẩn lỗi để không gián đoạn thao tác bấm */ }
+            catch { /* Tạm ẩn lỗi ngầm */ }
         }
 
-        // Hàm Reset nhanh trạng thái toàn bộ 12 đèn về màu xám tắt
-        private void ResetAllLights()
-        {
-            lblNorthRed.BackColor = Color.LightGray; lblNorthYellow.BackColor = Color.LightGray; lblNorthGreen.BackColor = Color.LightGray;
-            lblSouthRed.BackColor = Color.LightGray; lblSouthYellow.BackColor = Color.LightGray; lblSouthGreen.BackColor = Color.LightGray;
-            lblEastRed.BackColor = Color.LightGray; lblEastYellow.BackColor = Color.LightGray; lblEastGreen.BackColor = Color.LightGray;
-            lblWestRed.BackColor = Color.LightGray; lblWestYellow.BackColor = Color.LightGray; lblWestGreen.BackColor = Color.LightGray;
-        }
-
-        // --- 5. LOGIC XỬ LÝ CÁC NÚT ĐIỀU KHIỂN CHẾ ĐỘ ---
+        // --- 6. LOGIC XỬ LÝ CÁC NÚT ĐIỀU KHIỂN CHẾ ĐỘ ---
         private async void btnModeAuto_Click(object sender, EventArgs e)
         {
-            // 1. Giao diện local chuyển trạng thái sang Tự động
-            currentMode = "AUTO";
-            lblStatusTag.Text = "CHẾ ĐỘ: TỰ ĐỘNG";
-            lblStatusTag.BackColor = SystemColors.ActiveCaption;
-            pnlManualGroup.Enabled = false; // Khóa cụm nút bấm tay lại
+            AddLog("Lệnh người dùng", "AUTO", "Gửi lệnh yêu cầu chế độ Tự Động.");
+            pnlManualGroup.Enabled = false;
 
-            // 2. ĐÓNG GÓI DỮ LIỆU ĐỂ BẮN TRAO ĐỔI VỚI BACKEND
-            var requestData = new
-            {
-                Action = "CHANGE_MODE",
-                Mode = "AUTO"
-            };
-
+            var requestData = new { Action = "CHANGE_MODE", Mode = "AUTO" };
             string jsonPayload = JsonSerializer.Serialize(requestData);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            // 3. GỬI LỆNH LÊN CONTROL CONTROLLER
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    var response = await client.PostAsync("http://localhost:5010/api/control", content);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show("Backend nhận lệnh chuyển AUTO nhưng mạch không phản hồi!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
+                var response = await _httpClient.PostAsync($"{_baseUrl}/api/control", content);
+                if (!response.IsSuccessStatusCode)
+                    MessageBox.Show("Backend nhận lệnh nhưng mạch không phản hồi!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Không thể kết nối tới API Control: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AddLog("Mạng", "LỖI", "Gửi lệnh AUTO thất bại.");
+                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private async void btnModeManual_Click(object sender, EventArgs e)
         {
-            // 1. Giao diện local chuyển trạng thái trước để mượt mà
-            currentMode = "MANUAL";
-            lblStatusTag.Text = "CHẾ ĐỘ: THỦ CÔNG";
-            lblStatusTag.BackColor = Color.LightPink;
+            AddLog("Lệnh người dùng", "MANUAL", "Gửi lệnh yêu cầu chế độ Thủ Công.");
             pnlManualGroup.Enabled = true;
 
-            // 2. ĐÓNG GÓI DỮ LIỆU ĐÚNG THEO YÊU CẦU CỦA CONTROLREQUEST
-            var requestData = new
-            {
-                Action = "CHANGE_MODE",
-                Mode = "MANUAL"
-            };
-
-            // Chuyển đối tượng thành chuỗi JSON
+            var requestData = new { Action = "CHANGE_MODE", Mode = "MANUAL" };
             string jsonPayload = JsonSerializer.Serialize(requestData);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            // 3. GỬI HTTP POST SANG BACKEND
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    // Thay port 5010 cho đúng với port Backend hiện tại của bạn
-                    // Route mặc định là /api/control theo cấu hình [Route("api/[controller]")]
-                    var response = await client.PostAsync("http://localhost:5010/api/control", content);
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show("Backend nhận lệnh nhưng mạch Proteus không phản hồi hoặc xử lý lỗi!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
+                var response = await _httpClient.PostAsync($"{_baseUrl}/api/control", content);
+                if (!response.IsSuccessStatusCode)
+                    MessageBox.Show("Backend nhận lệnh nhưng mạch không phản hồi!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Không thể kết nối tới API Control: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AddLog("Mạng", "LỖI", "Gửi lệnh MANUAL thất bại.");
+                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // --- 6. LOGIC ĐIỀU KHIỂN ĐÈN THỦ CÔNG KHI TRONG CHẾ ĐỘ THỦ CÔNG ---
+        // --- 7. LOGIC ĐIỀU KHIỂN ĐÈN THỦ CÔNG ---
         private async void btnNSG_EWR_Click(object sender, EventArgs e)
         {
-            // Ép hướng Bắc, Nam thành Xanh; hướng Đông, Tây thành Đỏ
+            AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Bắc/Nam (XANH) - Đông/Tây (ĐỎ).");
             await SendLightCommand("NORTH", "GREEN");
             await SendLightCommand("SOUTH", "GREEN");
             await SendLightCommand("EAST", "RED");
@@ -321,6 +289,7 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
 
         private async void btnNSY_EWR_Click(object sender, EventArgs e)
         {
+            AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Bắc/Nam (VÀNG) - Đông/Tây (ĐỎ).");
             await SendLightCommand("NORTH", "YELLOW");
             await SendLightCommand("SOUTH", "YELLOW");
             await SendLightCommand("EAST", "RED");
@@ -329,6 +298,7 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
 
         private async void btnEWG_NSR_Click(object sender, EventArgs e)
         {
+            AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Đông/Tây (XANH) - Bắc/Nam (ĐỎ).");
             await SendLightCommand("NORTH", "RED");
             await SendLightCommand("SOUTH", "RED");
             await SendLightCommand("EAST", "GREEN");
@@ -337,60 +307,53 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
 
         private async void btnEWY_NSR_Click(object sender, EventArgs e)
         {
+            AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Đông/Tây (VÀNG) - Bắc/Nam (ĐỎ).");
             await SendLightCommand("NORTH", "RED");
             await SendLightCommand("SOUTH", "RED");
             await SendLightCommand("EAST", "YELLOW");
             await SendLightCommand("WEST", "YELLOW");
         }
 
-        // --- 7. LƯU VÀ ÁP DỤNG CẤU HÌNH THỜI GIAN ĐÈN MỚI ---
+        // --- 8. LƯU VÀ ÁP DỤNG CẤU HÌNH THỜI GIAN ĐÈN MỚI ---
         private async void btnSaveConfig_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Lấy thời gian từ giao diện
-                int greenTime = (int)nudGreen.Value;
-                int yellowTime = (int)nudYellow.Value;
+                greenTime = (int)nudGreen.Value;
+                yellowTime = (int)nudYellow.Value;
+                redTime = greenTime + yellowTime;
+                nudRed.Value = redTime;
 
-                // Tự động tính toán lại đèn Đỏ cho chuẩn logic (Đỏ = Xanh + Vàng)
-                int redTime = greenTime + yellowTime;
-                nudRed.Value = redTime; // Cập nhật lại lên UI cho người dùng thấy
-
-                // 2. Đóng gói dữ liệu thành JSON để gửi lên Backend
                 var configData = new
                 {
-                    NsGreenTime = greenTime,   // Gán ô nhập vào trục Bắc - Nam
+                    NsGreenTime = greenTime,
                     NsYellowTime = yellowTime,
-                    EwGreenTime = greenTime,   // Vì dùng chung cấu hình nên trục Đông - Tây nhận giá trị y hệt
+                    EwGreenTime = greenTime,
                     EwYellowTime = yellowTime,
                     Mode = currentMode ?? "AUTO"
                 };
 
-                string jsonPayload = System.Text.Json.JsonSerializer.Serialize(configData);
-                var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+                AddLog("Cấu hình", currentMode, $"Cập nhật thời gian: Xanh {greenTime}s, Vàng {yellowTime}s, Đỏ {redTime}s.");
 
-                // 3. Gọi API PUT /api/config
-                using (HttpClient client = new HttpClient())
+                string jsonPayload = JsonSerializer.Serialize(configData);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PutAsync($"{_baseUrl}/api/config", content);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    // Sửa port 5010 cho khớp với Backend của bạn
-                    HttpResponseMessage response = await client.PutAsync("http://localhost:5010/api/config", content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        MessageBox.Show("Đã lưu và áp dụng cấu hình thời gian mới xuống hệ thống!",
-                                        "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Lỗi khi lưu cấu hình. Mã lỗi: " + response.StatusCode,
-                                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    MessageBox.Show("Đã lưu và áp dụng cấu hình!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    AddLog("Mạng", "LỖI", $"Lưu cấu hình lỗi mã: {response.StatusCode}");
+                    MessageBox.Show("Lỗi khi lưu cấu hình.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể kết nối tới Backend: {ex.Message}",
-                                "Lỗi Mạng", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AddLog("Mạng", "LỖI", "Không thể gửi lệnh cấu hình.");
+                MessageBox.Show($"Không thể kết nối tới Backend: {ex.Message}", "Lỗi Mạng", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -398,50 +361,33 @@ namespace TrafficSystem_WinForm // <-- BẠN CÓ THỂ ĐỔI THÀNH NAMESPACE �
         {
             try
             {
-                // 1. Vô hiệu hóa nút tạm thời để tránh spam click
                 btnModeEmergency.Enabled = false;
+                AddLog("Lệnh người dùng", "EMERGENCY", "Gửi lệnh kích hoạt chế độ KHẨN CẤP.");
 
-                // 2. Chuẩn bị dữ liệu JSON đúng với format của ControlRequest trên Backend
-                var requestData = new
+                var requestData = new { Action = "CHANGE_MODE", Mode = "EMERGENCY" };
+                string jsonPayload = JsonSerializer.Serialize(requestData);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{_baseUrl}/api/control", content);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    Action = "CHANGE_MODE",
-                    Mode = "EMERGENCY"
-                };
-
-                string jsonPayload = System.Text.Json.JsonSerializer.Serialize(requestData);
-                var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
-
-                // 3. Gửi Request lên Backend (Dựa theo hình Swagger của bạn, port là 7135)
-                // Lưu ý: Nếu URL gốc của bạn được khai báo dùng chung toàn cục thì thay thế dòng này
-                string apiUrl = "https://localhost:7135/api/Control";
-
-                using (HttpClient client = new HttpClient())
+                    MessageBox.Show("Hệ thống đã chuyển sang chế độ KHẨN CẤP!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
                 {
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        // 4. Cập nhật giao diện khi thành công
-                        MessageBox.Show("Hệ thống đã chuyển sang chế độ KHẨN CẤP!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                        // Gợi ý: Bạn có thể cập nhật Label hiển thị chế độ trên UI cho sinh động
-                        // Ví dụ: lblCurrentMode.Text = "CHẾ ĐỘ: KHẨN CẤP";
-                        // lblCurrentMode.BackColor = Color.Red;
-                    }
-                    else
-                    {
-                        string errorResponse = await response.Content.ReadAsStringAsync();
-                        MessageBox.Show($"API từ chối lệnh. Mã lỗi: {response.StatusCode}\nChi tiết: {errorResponse}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    AddLog("Mạng", "LỖI", "Backend từ chối lệnh EMERGENCY.");
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"API từ chối lệnh.\nChi tiết: {errorResponse}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể kết nối đến Backend: {ex.Message}", "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AddLog("Mạng", "LỖI", "Lỗi kết nối khi gửi lệnh KHẨN CẤP.");
+                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                // Mở khóa lại nút sau khi xử lý xong
                 btnModeEmergency.Enabled = true;
             }
         }
