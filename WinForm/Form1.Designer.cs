@@ -74,6 +74,7 @@
             colEvent = new DataGridViewTextBoxColumn();
             colMode = new DataGridViewTextBoxColumn();
             colDetail = new DataGridViewTextBoxColumn();
+            btnOnOff = new Button();
             pnlSaBan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picIntersection).BeginInit();
             grpLightEast.SuspendLayout();
@@ -94,6 +95,7 @@
             // 
             pnlSaBan.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlSaBan.BackColor = Color.White;
+            pnlSaBan.Controls.Add(btnOnOff);
             pnlSaBan.Controls.Add(lblCountSouth);
             pnlSaBan.Controls.Add(lblCountEast);
             pnlSaBan.Controls.Add(lblCountWest);
@@ -578,6 +580,17 @@
             colDetail.Name = "colDetail";
             colDetail.Width = 401;
             // 
+            // btnOnOff
+            // 
+            btnOnOff.BackColor = Color.FromArgb(46, 204, 113);
+            btnOnOff.Location = new Point(3, 3);
+            btnOnOff.Name = "btnOnOff";
+            btnOnOff.Size = new Size(157, 37);
+            btnOnOff.TabIndex = 10;
+            btnOnOff.Text = "BẬT HỆ THỐNG";
+            btnOnOff.UseVisualStyleBackColor = false;
+            btnOnOff.Click += btnOnOff_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 23F);
@@ -661,5 +674,6 @@
         private DataGridViewTextBoxColumn colEvent;
         private DataGridViewTextBoxColumn colMode;
         private DataGridViewTextBoxColumn colDetail;
+        private Button btnOnOff;
     }
 }
