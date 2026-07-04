@@ -29,22 +29,32 @@ namespace TrafficSystem_WinForm
         public Form1()
         {
             InitializeComponent();
+
+            // BẬT TÍNH NĂNG ĐỆM KÉP ĐỂ WINFORMS KHÔNG BỊ TRỄ KHI NHẬN LOG LIÊN TỤC
+            this.DoubleBuffered = true;
+
+            // Nếu dgvLogs làm giao diện bị giật, ép nó chạy mượt bằng cách này:
+            typeof(DataGridView).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.SetProperty,
+                null, dgvLogs, new object[] { true });
         }
 
         // --- 2. SỰ KIỆN PHÁT SINH KHI FORM KHỞI CHẠY ---
         private async void Form1_Load(object sender, EventArgs e)
         {
             SetupSignalR();
-
+            // Khóa sạch các nút điều khiển, bắt người dùng phải bấm "BẬT KẾT NỐI" trước
+            SetControlButtonsState(false);
 
             // Ghi log khởi động
             AddLog("Hệ thống", "KHỞI ĐỘNG", "Bắt đầu kết nối phần mềm giám sát.");
 
             try
             {
-                await _hubConnection.StartAsync();
+                //await _hubConnection.StartAsync();
                 AddLog("Mạng", "KẾT NỐI", "Đã kết nối SignalR thành công.");
-                MessageBox.Show("Đã kết nối SignalR thành công tới trung tâm điều khiển Backend!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -390,6 +400,100 @@ namespace TrafficSystem_WinForm
             {
                 btnModeEmergency.Enabled = true;
             }
+        }
+
+        private bool isConnected = false; // Đổi tên biến cho rõ nghĩa: Trạng thái kết nối của WinForm
+
+        private async void btnOnOff_Click(object sender, EventArgs e)
+        {
+            btnOnOff.Enabled = false; // Khóa tạm thời nút master để tránh click double
+
+            if (!isConnected) // TÌNH HUỐNG: NGƯỜI DÙNG ẤN "BẬT KẾT NỐI"
+            {
+                try
+                {
+                    // 1. Kết nối SignalR để nhận dữ liệu
+                    if (_hubConnection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Disconnected)
+                    {
+                        await _hubConnection.StartAsync();
+                        AddLog("Mạng", "KẾT NỐI", "WinForm đã kết nối thành công tới hệ thống.");
+                    }
+
+                    // 2. MỞ KHÓA toàn bộ các nút bấm điều khiển khác trên màn hình
+                    SetControlButtonsState(true);
+
+                    // 3. Thay đổi giao diện nút Master sang màu đỏ (Sẵn sàng NGẮT)
+                    isConnected = true;
+                    btnOnOff.Text = "NGẮT KẾT NỐI";
+                    btnOnOff.BackColor = Color.Red;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Không thể kết nối tới Backend! Vui lòng kiểm tra lại.\nChi tiết: " + ex.Message,
+                                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else // TÌNH HUỐNG: NGƯỜI DÙNG ẤN "NGẮT KẾT NỐI"
+            {
+                try
+                {
+                    // 1. GỬI LỆNH RESTART QUA API ĐỂ ÉP MẠCH PROTEUS QUAY VỀ TRẠNG THÁI KHỞI TẠO BAN ĐẦU
+                    // Lệnh này sẽ giải phóng chế độ thủ công/khẩn cấp và reset thời gian cài đặt về mặc định.
+                    var resetData = new
+                    {
+                        Action = "RESTART"
+                    };
+
+                    string jsonPayload = JsonSerializer.Serialize(resetData);
+                    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                    // Gọi API đến đầu /api/Control của Backend để ra lệnh cho Proteus
+                    await _httpClient.PostAsync($"{_baseUrl}/api/Control", content);
+
+                    AddLog("Hệ thống", "RESET", "Đã gửi lệnh khôi phục trạng thái gốc cho mạch Proteus.");
+
+
+                    // 2. KHÓA NGAY toàn bộ các nút bấm điều khiển khác trên màn hình WinForm
+                    SetControlButtonsState(false);
+
+
+                    // 3. Ngắt kết nối SignalR của riêng WinForm này để giải phóng băng thông
+                    if (_hubConnection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
+                    {
+                        await _hubConnection.StopAsync();
+                        AddLog("Mạng", "NGẮT KẾT NỐI", "WinForm đã ngắt kết nối an toàn.");
+                    }
+
+
+                    // 4. Khôi phục giao diện nút Master về trạng thái ban đầu và reset các đồng hồ về 0
+                    isConnected = false;
+                    btnOnOff.Text = "BẬT KẾT NỐI";
+                    btnOnOff.BackColor = Color.Green;
+
+                    lblCountNorth.Text = "0"; lblCountSouth.Text = "0";
+                    lblCountEast.Text = "0"; lblCountWest.Text = "0";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Có lỗi xảy ra khi khôi phục hệ thống: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            btnOnOff.Enabled = true; // Mở lại nút Master
+        }
+
+        private void SetControlButtonsState(bool isEnabled)
+        {
+            // Bạn hãy thay các tên nút dưới đây bằng ĐÚNG tên các nút điều khiển trên giao diện của bạn
+            // Ví dụ: nút tự động, nút thủ công, nút xác nhận đặt thời gian, các ô nhập dữ liệu...
+            btnModeAuto.Enabled = isEnabled;
+            btnModeManual.Enabled = isEnabled;
+            btnModeEmergency.Enabled = isEnabled;
+            btnSaveConfig.Enabled = isEnabled;
+
+            // Nếu có ô nhập thời gian (TextBox) hay ComboBox thì cũng khóa luôn:
+            // txtTime.Enabled = isEnabled;
+            // cboDirection.Enabled = isEnabled;
         }
     }
 }
