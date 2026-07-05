@@ -287,41 +287,29 @@ namespace TrafficSystem_WinForm
             }
         }
 
-        // --- 7. LOGIC ĐIỀU KHIỂN ĐÈN THỦ CÔNG ---
+        // --- 7. LOGIC ĐIỀU KHIỂN ĐÈN THỦ CÔNG (ĐÃ ĐỒNG BỘ VỚI ARDUINO) ---
         private async void btnNSG_EWR_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Bắc/Nam (XANH) - Đông/Tây (ĐỎ).");
-            await SendLightCommand("NORTH", "GREEN");
-            await SendLightCommand("SOUTH", "GREEN");
-            await SendLightCommand("EAST", "RED");
-            await SendLightCommand("WEST", "RED");
+            await SendLightCommand("BN", "XANH"); // Arduino sẽ tự động hiểu và ép Đông/Tây về đỏ
         }
 
         private async void btnNSY_EWR_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Bắc/Nam (VÀNG) - Đông/Tây (ĐỎ).");
-            await SendLightCommand("NORTH", "YELLOW");
-            await SendLightCommand("SOUTH", "YELLOW");
-            await SendLightCommand("EAST", "RED");
-            await SendLightCommand("WEST", "RED");
+            await SendLightCommand("BN", "VANG");
         }
 
         private async void btnEWG_NSR_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Đông/Tây (XANH) - Bắc/Nam (ĐỎ).");
-            await SendLightCommand("NORTH", "RED");
-            await SendLightCommand("SOUTH", "RED");
-            await SendLightCommand("EAST", "GREEN");
-            await SendLightCommand("WEST", "GREEN");
+            await SendLightCommand("DT", "XANH"); // Arduino sẽ tự động hiểu và ép Bắc/Nam về đỏ
         }
 
         private async void btnEWY_NSR_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Đông/Tây (VÀNG) - Bắc/Nam (ĐỎ).");
-            await SendLightCommand("NORTH", "RED");
-            await SendLightCommand("SOUTH", "RED");
-            await SendLightCommand("EAST", "YELLOW");
-            await SendLightCommand("WEST", "YELLOW");
+            await SendLightCommand("DT", "VANG");
         }
 
         // --- 8. LƯU VÀ ÁP DỤNG CẤU HÌNH THỜI GIAN ĐÈN MỚI ---

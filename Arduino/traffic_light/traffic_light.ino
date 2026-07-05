@@ -92,7 +92,7 @@ void loop() {
   }
 }
 
-// ---------------- XỬ LÝ LỆNH TỪ SERIAL ----------------
+// ---------------- XỬ LÝ LỆNH TỪ SERIAL (ĐÃ TỐI ƯU 100% CẤU HÌNH & THỦ CÔNG) ----------------
 void handleCommand(String raw) {
   if (!raw.startsWith("CMD:")) return;
   
@@ -115,11 +115,47 @@ void handleCommand(String raw) {
     else if (mode == "MANUAL") { currentMode = 1; syncDisplays(); }
     else if (mode == "EMERGENCY") { currentMode = 2; setEmergency(); }
   }
+  // SỬA LỖI ĐÈN PROTEUS ĐỨNG YÊN: Map trọn vẹn cụm lệnh điều khiển từ Web UI xuống Proteus
   else if (action == "SET_LIGHT") {
     if (currentMode != 1) return; 
-    String dir = parts[2];
-    String color = parts[3];
-    setOneLight(dir, color);
+    String dir = parts[2];   // Nhận "BN" hoặc "DT"
+    String color = parts[3]; // Nhận "XANH" hoặc "VANG"
+    
+    if (dir == "BN") {
+      int c = (color == "XANH") ? 1 : ((color == "VANG") ? 2 : 0);
+      lightN = c; lightS = c;
+      lightE = 0; lightW = 0; // Khi Bắc-Nam sáng đèn, Đông-Tây mặc định ép về ĐỎ (0)
+    }
+    else if (dir == "DT") {
+      int c = (color == "XANH") ? 1 : ((color == "VANG") ? 2 : 0);
+      lightE = c; lightW = c;
+      lightN = 0; lightS = 0; // Khi Đông-Tây sáng đèn, Bắc-Nam mặc định ép về ĐỎ (0)
+    }
+    applyLights();
+    syncDisplays();
+  }
+  // SỬA LỖI TRƠ NÚT LƯU CẤU HÌNH: Giải mã chuỗi gộp "25,3,28" từ Backend chuyển xuống thành công
+  else if (action == "SET_TIME") {
+    String timeData = parts[2]; // Chuỗi thô có dạng: "25,3,28"
+    int firstComma = timeData.indexOf(',');
+    int secondComma = timeData.indexOf(',', firstComma + 1);
+    
+    if (firstComma > 0 && secondComma > firstComma) {
+      int g = timeData.substring(0, firstComma).toInt();
+      int y = timeData.substring(firstComma + 1, secondComma).toInt();
+      int r = timeData.substring(secondComma + 1).toInt();
+      
+      // Đồng bộ vào biến nhớ cấu hình chu kỳ của mạch giao thông đối xứng
+      nsGreenTime = g;
+      nsYellowTime = y;
+      ewGreenTime = r - y; // Đảm bảo thời gian xanh hướng này bằng tổng chu kỳ hướng kia
+      ewYellowTime = y;
+      
+      // Áp dụng lập tức nếu đang trong chế độ Tự Động
+      if (currentMode == 0) {
+        setAutoPhase(autoPhase);
+      }
+    }
   }
   else if (action == "RESTART") {
     currentMode = 0;
@@ -130,7 +166,7 @@ void handleCommand(String raw) {
     systemOn = (parts[2] == "ON");
     if (!systemOn) {
       allOff();
-      lc.clearDisplay(0); // Tắt màn hình khi tắt hệ thống
+      lc.clearDisplay(0); 
     } else {
       if (currentMode == 0) setAutoPhase(autoPhase);
       else if (currentMode == 2) setEmergency();

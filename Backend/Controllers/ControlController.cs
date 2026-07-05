@@ -61,6 +61,26 @@ namespace Backend.Controllers
                         req.Light);
                     break;
 
+                case "SET_TIME":
+                    if (req.Green == null ||
+                        req.Yellow == null ||
+                        req.Red == null)
+                    {
+                        return BadRequest(new
+                        {
+                            error = "Thiếu thông tin cấu hình thời gian đầy đủ (Xanh, Vàng, Đỏ)!"
+                        });
+                    }
+
+                    // Gộp 3 thông số thành chuỗi định dạng "Xanh,Vàng,Đỏ" (Ví dụ: "25,3,28")
+                    // Cách này đưa về overload 2 tham số, giải quyết triệt để lỗi build CS1501
+                    string combinedTimeData = $"{req.Green},{req.Yellow},{req.Red}";
+
+                    SerialBridgeService.Instance?.SendCommandToArduino(
+                        "SET_TIME",
+                        combinedTimeData);
+                    break;
+
                 case "RESTART":
                     SerialBridgeService.Instance?.SendCommandToArduino(
                         "RESTART");
@@ -110,5 +130,10 @@ namespace Backend.Controllers
         public string? Direction { get; set; }
         public string? Light { get; set; }
         public bool? Value { get; set; }
+
+        // Mở rộng thêm 3 thuộc tính phục vụ lưu thời gian từ Web UI
+        public int? Green { get; set; }
+        public int? Yellow { get; set; }
+        public int? Red { get; set; }
     }
 }
