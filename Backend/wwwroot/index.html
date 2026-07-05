@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Giao Thông - Web UI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f1f3f5;
+            padding-top: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .light-box {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: #fff;
+            border: 2px solid #e9ecef;
+        }
+
+        .disabled-overlay {
+            opacity: 0.4;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .status-badge {
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 900px;">
+        <div class="card p-4 mb-4 text-center">
+            <h2 class="fw-bold text-primary mb-3">🚦 HỆ THỐNG GIÁM SÁT & ĐIỀU KHIỂN GIAO THÔNG</h2>
+            <div>
+                <button id="btnOnOff" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">BẬT KẾT NỐI HỆ THỐNG</button>
+            </div>
+        </div>
+
+        <div id="dashboard" class="row g-3 justify-content-center disabled-overlay mb-4">
+            <div class="col-6 col-md-3">
+                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA BẮC</small><span id="timeNorth" class="text-danger">00</span></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA NAM</small><span id="timeSouth" class="text-danger">00</span></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA ĐÔNG</small><span id="timeEast" class="text-danger">00</span></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA TÂY</small><span id="timeWest" class="text-danger">00</span></div>
+            </div>
+        </div>
+
+        <div id="controls" class="card p-4 text-center disabled-overlay">
+            <h4 class="fw-bold mb-3 text-secondary">BẢNG ĐIỀU KHIỂN CHẾ ĐỘ</h4>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <button class="btn btn-outline-primary btn-lg px-4 fw-semibold" onclick="sendAction('AUTO')">🔄 Tự Động</button>
+                <button class="btn btn-outline-warning btn-lg px-4 fw-semibold" onclick="sendAction('MANUAL')">🎮 Thủ Công</button>
+                <button class="btn btn-outline-danger btn-lg px-4 fw-semibold" onclick="sendAction('EMERGENCY')">🚨 Khẩn Cấp</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
