@@ -4,74 +4,846 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Giao Thông - Web UI</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            color-scheme: dark;
+            --bg-app: #0a0e13;
+            --bg-panel: #121820;
+            --bg-panel-raised: #1a222c;
+            --bg-input: #0d1319;
+            --border: #26313d;
+            --border-soft: #1d2530;
+            --text: #e7edf3;
+            --text-dim: #7c8a9a;
+            --text-faint: #4d5866;
+            --accent: #3ea6ff;
+            --accent-dim: rgba(62, 166, 255, 0.14);
+            --signal-red: #ff3b30;
+            --signal-amber: #ffb020;
+            --signal-green: #00e676;
+            --asphalt: #171c23;
+            --asphalt-lane: #232b34;
+            --curb: #465262;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 7px;
+            --font-display: 'Chakra Petch', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #f1f3f5;
-            padding-top: 30px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at 50% -10%, #151c25 0%, var(--bg-app) 55%);
+            color: var(--text);
+            font-family: var(--font-body);
+            padding: 24px 16px 48px;
+            margin: 0;
+            min-height: 100vh;
         }
 
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
         }
 
-        .light-box {
-            font-size: 2.5rem;
-            font-weight: 700;
+        /* ================= HEADER ================= */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 14px 22px;
+            margin-bottom: 20px;
+        }
+
+        .topbar__title {
             text-align: center;
-            padding: 15px;
-            border-radius: 12px;
-            background: #fff;
-            border: 2px solid #e9ecef;
+            flex: 1;
+            min-width: 220px;
+        }
+
+            .topbar__title h1 {
+                font-family: var(--font-display);
+                font-weight: 700;
+                font-size: 1.5rem;
+                letter-spacing: 0.5px;
+                margin: 0;
+                color: var(--text);
+            }
+
+            .topbar__title p {
+                margin: 2px 0 0;
+                font-size: 0.78rem;
+                color: var(--text-dim);
+                letter-spacing: 0.3px;
+            }
+
+        .btn {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+        }
+
+            .btn:hover {
+                filter: brightness(1.08);
+            }
+
+            .btn:active {
+                transform: translateY(1px);
+            }
+
+            .btn:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+
+        .power-switch {
+            position: relative;
+            padding: 12px 26px 12px 40px;
+            font-size: 0.92rem;
+            letter-spacing: 0.4px;
+            color: #06110c;
+        }
+
+            .power-switch::before {
+                content: "";
+                position: absolute;
+                left: 16px;
+                top: 50%;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                transform: translateY(-50%);
+            }
+
+            .power-switch.btn-success {
+                background: linear-gradient(180deg, #35e68a, #00c266);
+                box-shadow: 0 0 0 1px rgba(0,230,118,0.35), 0 4px 14px rgba(0,230,118,0.18);
+            }
+
+                .power-switch.btn-success::before {
+                    background: #06110c;
+                    opacity: 0.35;
+                }
+
+            .power-switch.btn-danger {
+                background: linear-gradient(180deg, #ff5c50, #e8231a);
+                box-shadow: 0 0 0 1px rgba(255,59,48,0.4), 0 4px 14px rgba(255,59,48,0.25);
+                color: #1a0605;
+            }
+
+                .power-switch.btn-danger::before {
+                    background: #fff;
+                    box-shadow: 0 0 8px 2px rgba(255,255,255,0.7);
+                    animation: pulse-dot 1.4s ease-in-out infinite;
+                }
+
+        .status-pill {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: var(--accent);
+            background: var(--accent-dim);
+            border: 1px solid rgba(62,166,255,0.35);
+            border-radius: 999px;
+            padding: 9px 18px;
+            white-space: nowrap;
+        }
+
+        /* ================= LAYOUT ================= */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 18px;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .disabled-overlay {
-            opacity: 0.4;
+            opacity: 0.35;
+            filter: grayscale(0.6) blur(0.3px);
             pointer-events: none;
-            transition: all 0.3s ease;
         }
 
-        .status-badge {
-            font-size: 1.1rem;
-            padding: 8px 16px;
-            border-radius: 20px;
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+        }
+
+        .panel-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel__label {
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding-left: 12px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 16px;
+        }
+
+        /* ================= INTERSECTION ================= */
+        .panel--intersection {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .intersection-container {
+            position: relative;
+            min-height: 480px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--asphalt);
+        }
+
+        .road-surface {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent 0, transparent calc(50% - 95px), var(--asphalt-lane) calc(50% - 95px), var(--asphalt-lane) calc(50% + 95px), transparent calc(50% + 95px), transparent 100%), linear-gradient(to bottom, transparent 0, transparent calc(50% - 95px), var(--asphalt-lane) calc(50% - 95px), var(--asphalt-lane) calc(50% + 95px), transparent calc(50% + 95px), transparent 100%);
+        }
+
+            .road-surface::before, .road-surface::after {
+                content: "";
+                position: absolute;
+                background-repeat: repeat;
+            }
+            /* vertical dashed lane line (north-south road) */
+            .road-surface::before {
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                transform: translateX(-50%);
+                background-image: repeating-linear-gradient(to bottom, #4a5666 0 16px, transparent 16px 32px);
+            }
+            /* horizontal dashed lane line (east-west road) */
+            .road-surface::after {
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 3px;
+                transform: translateY(-50%);
+                background-image: repeating-linear-gradient(to right, #4a5666 0 16px, transparent 16px 32px);
+            }
+
+        .center-crossroad {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 190px;
+            height: 190px;
+            background: var(--asphalt-lane);
+            border: 1px solid #313b47;
+            border-radius: 4px;
+        }
+
+        .crosswalk {
+            position: absolute;
+            z-index: 1;
+        }
+
+        .cw-n, .cw-s {
+            width: 130px;
+            height: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: repeating-linear-gradient(to right, #c7cfd6 0 9px, transparent 9px 18px);
+        }
+
+        .cw-n {
+            top: calc(50% - 95px - 24px);
+        }
+
+        .cw-s {
+            top: calc(50% + 95px);
+        }
+
+        .cw-e, .cw-w {
+            width: 24px;
+            height: 130px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: repeating-linear-gradient(to bottom, #c7cfd6 0 9px, transparent 9px 18px);
+        }
+
+        .cw-w {
+            left: calc(50% - 95px - 24px);
+        }
+
+        .cw-e {
+            left: calc(50% + 95px);
+        }
+
+        .pos-north {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .pos-south {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .pos-west {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .pos-east {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .light-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .dir-label {
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            background: var(--bg-panel-raised);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 2px 12px;
+        }
+
+        .traffic-light-container {
+            background: linear-gradient(180deg, #1c2430, #10151c);
+            padding: 8px 7px;
+            border-radius: 9px;
+            border: 2px solid #3a4451;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .lamp {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #23272c;
+            opacity: 0.5;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.6);
+            transition: all 0.2s;
+            position: relative;
+        }
+
+            .lamp.active.lamp-red {
+                background: radial-gradient(circle at 35% 30%, #ffb3ad 0%, var(--signal-red) 45%, #b8231b 100%);
+                box-shadow: 0 0 6px var(--signal-red), 0 0 22px 6px rgba(255,59,48,0.75);
+                opacity: 1;
+            }
+
+            .lamp.active.lamp-yellow {
+                background: radial-gradient(circle at 35% 30%, #ffe9b0 0%, var(--signal-amber) 45%, #c67e08 100%);
+                box-shadow: 0 0 6px var(--signal-amber), 0 0 22px 6px rgba(255,176,32,0.75);
+                opacity: 1;
+            }
+
+            .lamp.active.lamp-green {
+                background: radial-gradient(circle at 35% 30%, #baffdb 0%, var(--signal-green) 45%, #00a355 100%);
+                box-shadow: 0 0 6px var(--signal-green), 0 0 22px 6px rgba(0,230,118,0.75);
+                opacity: 1;
+            }
+
+        .digital-readout {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 3px 10px;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.6);
+        }
+
+        .timer-display {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--signal-amber);
+            text-shadow: 0 0 8px rgba(255,176,32,0.6);
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .digital-readout .unit {
+            font-size: 0.62rem;
+            color: var(--text-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ================= CONTROL: MODE ================= */
+        .mode-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .ctrl-btn {
+            flex: 1;
+            padding: 11px 8px;
+            font-family: var(--font-display);
+            font-size: 0.82rem;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            background: var(--bg-panel-raised);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .ctrl-btn--auto:hover {
+            border-color: var(--signal-green);
+            color: var(--signal-green);
+        }
+
+        .ctrl-btn--manual:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .ctrl-btn--emergency:hover {
+            border-color: var(--signal-red);
+            color: var(--signal-red);
+        }
+
+        .phase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .phase-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .phase-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            padding: 10px 12px;
+            background: var(--bg-panel-raised);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            text-align: left;
+        }
+
+            .phase-btn:hover {
+                border-left-color: var(--accent);
+                background: #1f2833;
+            }
+
+        .phase-axis {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .phase-state {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .phase-state--green {
+            color: var(--signal-green);
+        }
+
+        .phase-state--yellow {
+            color: var(--signal-amber);
+        }
+
+        .phase-note {
+            font-size: 0.68rem;
+            color: var(--text-faint);
+        }
+
+        /* ================= CONTROL: TIME CONFIG ================= */
+        .time-field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+            .time-field label {
+                font-size: 0.85rem;
+                color: var(--text-dim);
+                min-width: 70px;
+            }
+
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+        }
+
+            .time-input input {
+                width: 60px;
+                background: transparent;
+                border: none;
+                color: var(--text);
+                font-family: var(--font-mono);
+                font-size: 1.05rem;
+                text-align: right;
+            }
+
+                .time-input input:focus {
+                    outline: none;
+                }
+
+                .time-input input:focus-visible {
+                    outline: 2px solid var(--accent);
+                    border-radius: 4px;
+                }
+
+            .time-input span {
+                font-size: 0.72rem;
+                color: var(--text-faint);
+                text-transform: uppercase;
+            }
+
+        .save-btn {
+            width: 100%;
+            margin-top: 6px;
+            padding: 12px;
+            background: linear-gradient(180deg, #4fc3f7, #1e88c7);
+            color: #041722;
+            font-family: var(--font-display);
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        /* ================= LOG ================= */
+        .panel--log {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .log-scroll {
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-sm);
+        }
+
+            .log-scroll::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .log-scroll::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 4px;
+            }
+
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+
+            .log-table thead th {
+                position: sticky;
+                top: 0;
+                background: var(--bg-panel-raised);
+                color: var(--text-faint);
+                font-family: var(--font-display);
+                font-weight: 600;
+                font-size: 0.66rem;
+                letter-spacing: 0.8px;
+                text-transform: uppercase;
+                text-align: left;
+                padding: 8px 10px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .log-table tbody td {
+                padding: 8px 10px;
+                border-bottom: 1px solid var(--border-soft);
+                color: var(--text-dim);
+                vertical-align: top;
+            }
+
+            .log-table tbody tr:hover {
+                background: rgba(62,166,255,0.05);
+            }
+
+            .log-table strong {
+                font-family: var(--font-mono);
+                color: var(--text);
+                font-weight: 400;
+            }
+
+            .log-table small {
+                color: var(--text-faint);
+            }
+
+        .badge {
+            display: inline-block;
+            font-family: var(--font-body);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            padding: 3px 9px;
+            border-radius: 999px;
+        }
+
+            .badge.bg-success {
+                background: rgba(0,230,118,0.15);
+                color: var(--signal-green);
+            }
+
+            .badge.bg-primary {
+                background: rgba(62,166,255,0.15);
+                color: var(--accent);
+            }
+
+            .badge.bg-danger {
+                background: rgba(255,59,48,0.15);
+                color: var(--signal-red);
+            }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .power-switch.btn-danger::before {
+                animation: none;
+            }
+
+            .btn, .lamp {
+                transition: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" style="max-width: 900px;">
-        <div class="card p-4 mb-4 text-center">
-            <h2 class="fw-bold text-primary mb-3">🚦 HỆ THỐNG GIÁM SÁT & ĐIỀU KHIỂN GIAO THÔNG</h2>
-            <div>
-                <button id="btnOnOff" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">BẬT KẾT NỐI HỆ THỐNG</button>
-            </div>
-        </div>
+    <div class="wrap">
 
-        <div id="dashboard" class="row g-3 justify-content-center disabled-overlay mb-4">
-            <div class="col-6 col-md-3">
-                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA BẮC</small><span id="timeNorth" class="text-danger">00</span></div>
+        <header class="topbar">
+            <button id="btnOnOff" class="btn btn-success power-switch">BẬT HỆ THỐNG</button>
+            <div class="topbar__title">
+                <h1>🚦 Điều Khiển Giao Thông</h1>
+                <p>Ngã tư trung tâm — bộ điều khiển 4 hướng</p>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA NAM</small><span id="timeSouth" class="text-danger">00</span></div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA ĐÔNG</small><span id="timeEast" class="text-danger">00</span></div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="light-box"><small class="fs-6 text-muted d-block fw-semibold">PHÍA TÂY</small><span id="timeWest" class="text-danger">00</span></div>
-            </div>
-        </div>
+            <span class="badge status-pill" id="systemMode">CHẾ ĐỘ: KHỞI TẠO</span>
+        </header>
 
-        <div id="controls" class="card p-4 text-center disabled-overlay">
-            <h4 class="fw-bold mb-3 text-secondary">BẢNG ĐIỀU KHIỂN CHẾ ĐỘ</h4>
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <button class="btn btn-outline-primary btn-lg px-4 fw-semibold" onclick="sendAction('AUTO')">🔄 Tự Động</button>
-                <button class="btn btn-outline-warning btn-lg px-4 fw-semibold" onclick="sendAction('MANUAL')">🎮 Thủ Công</button>
-                <button class="btn btn-outline-danger btn-lg px-4 fw-semibold" onclick="sendAction('EMERGENCY')">🚨 Khẩn Cấp</button>
-            </div>
+        <div id="mainDashboard" class="dashboard-grid disabled-overlay">
+
+            <section class="panel panel--intersection">
+                <div class="panel__label">Sơ Đồ Nút Giao</div>
+                <div class="intersection-container">
+                    <div class="road-surface"></div>
+                    <div class="center-crossroad"></div>
+                    <div class="crosswalk cw-n"></div>
+                    <div class="crosswalk cw-s"></div>
+                    <div class="crosswalk cw-e"></div>
+                    <div class="crosswalk cw-w"></div>
+
+                    <div class="pos-north light-box">
+                        <small class="dir-label">BẮC</small>
+                        <div class="traffic-light-container">
+                            <div id="north-red" class="lamp lamp-red"></div>
+                            <div id="north-yellow" class="lamp lamp-yellow"></div>
+                            <div id="north-green" class="lamp lamp-green"></div>
+                        </div>
+                        <div class="digital-readout">
+                            <span class="timer-display" id="timerNorth">00</span>
+                            <span class="unit">giây</span>
+                        </div>
+                    </div>
+
+                    <div class="pos-west light-box">
+                        <small class="dir-label">TÂY</small>
+                        <div class="traffic-light-container">
+                            <div id="west-red" class="lamp lamp-red"></div>
+                            <div id="west-yellow" class="lamp lamp-yellow"></div>
+                            <div id="west-green" class="lamp lamp-green"></div>
+                        </div>
+                        <div class="digital-readout">
+                            <span class="timer-display" id="timerWest">00</span>
+                            <span class="unit">giây</span>
+                        </div>
+                    </div>
+
+                    <div class="pos-east light-box">
+                        <small class="dir-label">ĐÔNG</small>
+                        <div class="traffic-light-container">
+                            <div id="east-red" class="lamp lamp-red"></div>
+                            <div id="east-yellow" class="lamp lamp-yellow"></div>
+                            <div id="east-green" class="lamp lamp-green"></div>
+                        </div>
+                        <div class="digital-readout">
+                            <span class="timer-display" id="timerEast">00</span>
+                            <span class="unit">giây</span>
+                        </div>
+                    </div>
+
+                    <div class="pos-south light-box">
+                        <small class="dir-label">NAM</small>
+                        <div class="traffic-light-container">
+                            <div id="south-red" class="lamp lamp-red"></div>
+                            <div id="south-yellow" class="lamp lamp-yellow"></div>
+                            <div id="south-green" class="lamp lamp-green"></div>
+                        </div>
+                        <div class="digital-readout">
+                            <span class="timer-display" id="timerSouth">00</span>
+                            <span class="unit">giây</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="panel-stack">
+
+                <section class="panel">
+                    <div class="panel__label">Điều Khiển Hệ Thống</div>
+                    <div class="mode-row">
+                        <button class="btn ctrl-btn ctrl-btn--auto" onclick="changeMode('AUTO')">Tự Động</button>
+                        <button class="btn ctrl-btn ctrl-btn--manual" onclick="changeMode('MANUAL')">Thủ Công</button>
+                        <button class="btn ctrl-btn ctrl-btn--emergency" onclick="changeMode('EMERGENCY')">Khẩn Cấp</button>
+                    </div>
+                    <div class="phase-grid">
+                        <button class="btn phase-btn" onclick="triggerManualPhase('BN', 'XANH')">
+                            <span class="phase-axis">Bắc – Nam</span>
+                            <span class="phase-state phase-state--green">XANH</span>
+                            <span class="phase-note">Đông – Tây: Đỏ</span>
+                        </button>
+                        <button class="btn phase-btn" onclick="triggerManualPhase('BN', 'VANG')">
+                            <span class="phase-axis">Bắc – Nam</span>
+                            <span class="phase-state phase-state--yellow">VÀNG</span>
+                            <span class="phase-note">Đông – Tây: Đỏ</span>
+                        </button>
+                        <button class="btn phase-btn" onclick="triggerManualPhase('DT', 'XANH')">
+                            <span class="phase-axis">Đông – Tây</span>
+                            <span class="phase-state phase-state--green">XANH</span>
+                            <span class="phase-note">Bắc – Nam: Đỏ</span>
+                        </button>
+                        <button class="btn phase-btn" onclick="triggerManualPhase('DT', 'VANG')">
+                            <span class="phase-axis">Đông – Tây</span>
+                            <span class="phase-state phase-state--yellow">VÀNG</span>
+                            <span class="phase-note">Bắc – Nam: Đỏ</span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel__label">Cấu Hình Thời Gian</div>
+                    <div class="time-field">
+                        <label for="timeGreen">Xanh</label>
+                        <div class="time-input">
+                            <input type="number" id="timeGreen" value="25">
+                            <span>giây</span>
+                        </div>
+                    </div>
+                    <div class="time-field">
+                        <label for="timeYellow">Vàng</label>
+                        <div class="time-input">
+                            <input type="number" id="timeYellow" value="3">
+                            <span>giây</span>
+                        </div>
+                    </div>
+                    <div class="time-field">
+                        <label for="timeRed">Đỏ</label>
+                        <div class="time-input">
+                            <input type="number" id="timeRed" value="28">
+                            <span>giây</span>
+                        </div>
+                    </div>
+                    <button class="btn save-btn" onclick="saveTimeConfig()">Lưu &amp; Áp Dụng Cấu Hình</button>
+                </section>
+
+                <section class="panel panel--log">
+                    <div class="panel__label">Lịch Sử Hoạt Động Real-time</div>
+                    <div class="log-scroll">
+                        <table class="log-table" id="logTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 22%">Giờ</th>
+                                    <th style="width: 33%">Sự kiện / Pha</th>
+                                    <th style="width: 20%">Chế độ</th>
+                                    <th style="width: 25%">Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </aside>
         </div>
     </div>
 
