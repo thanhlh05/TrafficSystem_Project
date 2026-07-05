@@ -47,6 +47,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseDefaultFiles(); // Tự động tìm file index.html làm trang chủ
+app.UseStaticFiles();  // Kích hoạt đọc file tĩnh trong wwwroot
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
