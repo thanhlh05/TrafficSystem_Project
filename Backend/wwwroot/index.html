@@ -459,6 +459,11 @@
             color: var(--signal-red);
         }
 
+        .ctrl-btn--flash:hover {
+            border-color: var(--signal-amber);
+            color: var(--signal-amber);
+        }
+
         .phase-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -775,6 +780,7 @@
                         <button class="btn ctrl-btn ctrl-btn--auto" onclick="changeMode('AUTO')">Tự Động</button>
                         <button class="btn ctrl-btn ctrl-btn--manual" onclick="changeMode('MANUAL')">Thủ Công</button>
                         <button class="btn ctrl-btn ctrl-btn--emergency" onclick="changeMode('EMERGENCY')">Khẩn Cấp</button>
+                        <button class="btn ctrl-btn ctrl-btn--flash" onclick="changeMode('FLASH')">Cảnh Báo</button>
                     </div>
                     <div class="phase-grid">
                         <button class="btn phase-btn" onclick="triggerManualPhase('BN', 'XANH')">

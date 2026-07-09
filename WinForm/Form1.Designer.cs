@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             pnlSaBan = new Panel();
+            btnOnOff = new Button();
             lblCountSouth = new Label();
             lblCountEast = new Label();
             lblCountWest = new Label();
@@ -74,7 +75,7 @@
             colEvent = new DataGridViewTextBoxColumn();
             colMode = new DataGridViewTextBoxColumn();
             colDetail = new DataGridViewTextBoxColumn();
-            btnOnOff = new Button();
+            btnModeFlash = new Button();
             pnlSaBan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picIntersection).BeginInit();
             grpLightEast.SuspendLayout();
@@ -96,6 +97,7 @@
             pnlSaBan.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlSaBan.BackColor = Color.White;
             pnlSaBan.Controls.Add(btnOnOff);
+            pnlSaBan.Controls.Add(btnModeEmergency);
             pnlSaBan.Controls.Add(lblCountSouth);
             pnlSaBan.Controls.Add(lblCountEast);
             pnlSaBan.Controls.Add(lblCountWest);
@@ -110,6 +112,17 @@
             pnlSaBan.Name = "pnlSaBan";
             pnlSaBan.Size = new Size(550, 480);
             pnlSaBan.TabIndex = 0;
+            // 
+            // btnOnOff
+            // 
+            btnOnOff.BackColor = Color.FromArgb(46, 204, 113);
+            btnOnOff.Location = new Point(3, 3);
+            btnOnOff.Name = "btnOnOff";
+            btnOnOff.Size = new Size(157, 37);
+            btnOnOff.TabIndex = 10;
+            btnOnOff.Text = "BẬT HỆ THỐNG";
+            btnOnOff.UseVisualStyleBackColor = false;
+            btnOnOff.Click += btnOnOff_Click;
             // 
             // lblCountSouth
             // 
@@ -324,8 +337,8 @@
             // grpControl
             // 
             grpControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            grpControl.Controls.Add(btnModeFlash);
             grpControl.Controls.Add(pnlManualGroup);
-            grpControl.Controls.Add(btnModeEmergency);
             grpControl.Controls.Add(btnModeManual);
             grpControl.Controls.Add(btnModeAuto);
             grpControl.Location = new Point(585, 15);
@@ -399,8 +412,8 @@
             // 
             btnModeEmergency.BackColor = Color.FromArgb(231, 76, 60);
             btnModeEmergency.Cursor = Cursors.Cross;
-            btnModeEmergency.ForeColor = Color.White;
-            btnModeEmergency.Location = new Point(250, 30);
+            btnModeEmergency.ForeColor = Color.Black;
+            btnModeEmergency.Location = new Point(432, 431);
             btnModeEmergency.Name = "btnModeEmergency";
             btnModeEmergency.Size = new Size(115, 45);
             btnModeEmergency.TabIndex = 2;
@@ -412,7 +425,7 @@
             // 
             btnModeManual.BackColor = Color.FromArgb(52, 152, 219);
             btnModeManual.Cursor = Cursors.Cross;
-            btnModeManual.ForeColor = Color.White;
+            btnModeManual.ForeColor = Color.Black;
             btnModeManual.Location = new Point(135, 30);
             btnModeManual.Name = "btnModeManual";
             btnModeManual.Size = new Size(110, 45);
@@ -425,7 +438,7 @@
             // 
             btnModeAuto.BackColor = Color.FromArgb(46, 204, 113);
             btnModeAuto.Cursor = Cursors.Cross;
-            btnModeAuto.ForeColor = Color.White;
+            btnModeAuto.ForeColor = Color.Black;
             btnModeAuto.Location = new Point(20, 30);
             btnModeAuto.Name = "btnModeAuto";
             btnModeAuto.Size = new Size(110, 45);
@@ -580,16 +593,18 @@
             colDetail.Name = "colDetail";
             colDetail.Width = 401;
             // 
-            // btnOnOff
+            // btnModeFlash
             // 
-            btnOnOff.BackColor = Color.FromArgb(46, 204, 113);
-            btnOnOff.Location = new Point(3, 3);
-            btnOnOff.Name = "btnOnOff";
-            btnOnOff.Size = new Size(157, 37);
-            btnOnOff.TabIndex = 10;
-            btnOnOff.Text = "BẬT HỆ THỐNG";
-            btnOnOff.UseVisualStyleBackColor = false;
-            btnOnOff.Click += btnOnOff_Click;
+            btnModeFlash.BackColor = Color.Gold;
+            btnModeFlash.Cursor = Cursors.Cross;
+            btnModeFlash.ForeColor = Color.Black;
+            btnModeFlash.Location = new Point(251, 30);
+            btnModeFlash.Name = "btnModeFlash";
+            btnModeFlash.Size = new Size(110, 45);
+            btnModeFlash.TabIndex = 4;
+            btnModeFlash.Text = "CẢNH BÁO";
+            btnModeFlash.UseVisualStyleBackColor = false;
+            btnModeFlash.Click += btnModeFlash_Click;
             // 
             // Form1
             // 
@@ -675,5 +690,6 @@
         private DataGridViewTextBoxColumn colMode;
         private DataGridViewTextBoxColumn colDetail;
         private Button btnOnOff;
+        private Button btnModeFlash;
     }
 }

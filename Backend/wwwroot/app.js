@@ -59,6 +59,10 @@ hubConnection.on("ReceiveStatus", (status) => {
             eventText = "Thao tác Thủ Công";
             detailText = `Yêu cầu sáng đèn trục ${nLight === 'GREEN' ? 'Bắc-Nam' : 'Đông-Tây'}`;
         }
+        else if (currentMode === "FLASH") {
+            eventText = "Đèn Nhấp Nháy";
+            detailText = `Kích hoạt cảnh báo Vàng 4 hướng`;
+        }
 
         addLogToTable(eventText, currentMode, detailText);
         lastMode = currentMode;
@@ -69,7 +73,7 @@ hubConnection.on("ReceiveStatus", (status) => {
     let displayNS = String(rTime).padStart(2, '0');
     let displayEW = String(rTime).padStart(2, '0');
 
-    if (currentMode === 'MANUAL') {
+    if (currentMode === 'MANUAL' || currentMode === 'FLASH') {
         displayNS = '--';
         displayEW = '--';
     } else if (currentMode === 'EMERGENCY') {
