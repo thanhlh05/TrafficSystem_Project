@@ -11,17 +11,16 @@ namespace TrafficSystem_WinForm
 {
     public partial class Form1 : Form
     {
-        // --- 1. CÁC BIẾN HỆ THỐNG & KẾT NỐI ---
-        private HubConnection _hubConnection;
+
+        private HubConnection _hubConnection; //quan ly ket noi signalIR
         private static readonly HttpClient _httpClient = new HttpClient();
-        private readonly string _baseUrl = "http://localhost:5010";
+        private readonly string _baseUrl = "http://localhost:5010";//dia chi be api
 
         private string currentMode = "AUTO";
         private int greenTime = 25;
         private int yellowTime = 3;
         private int redTime = 28;
 
-        // BIẾN LƯU TRẠNG THÁI CŨ ĐỂ THEO DÕI LỊCH SỬ THAY ĐỔI PHA ĐÈN
         private string _lastMode = "";
         private string _lastNorthLight = "";
         private string _lastEastLight = "";
@@ -30,10 +29,8 @@ namespace TrafficSystem_WinForm
         {
             InitializeComponent();
 
-            // BẬT TÍNH NĂNG ĐỆM KÉP ĐỂ WINFORMS KHÔNG BỊ TRỄ KHI NHẬN LOG LIÊN TỤC
             this.DoubleBuffered = true;
 
-            // Nếu dgvLogs làm giao diện bị giật, ép nó chạy mượt bằng cách này:
             typeof(DataGridView).InvokeMember("DoubleBuffered",
                 System.Reflection.BindingFlags.NonPublic |
                 System.Reflection.BindingFlags.Instance |
@@ -41,19 +38,15 @@ namespace TrafficSystem_WinForm
                 null, dgvLogs, new object[] { true });
         }
 
-        // --- 2. SỰ KIỆN PHÁT SINH KHI FORM KHỞI CHẠY ---
         private async void Form1_Load(object sender, EventArgs e)
         {
             SetupSignalR();
-            // Khóa sạch các nút điều khiển, bắt người dùng phải bấm "BẬT KẾT NỐI" trước
-            SetControlButtonsState(false);
+            SetControlButtonsState(false);//khoa cac nut trc khi bat ket noi
 
-            // Ghi log khởi động
             AddLog("Hệ thống", "KHỞI ĐỘNG", "Bắt đầu kết nối phần mềm giám sát.");
 
             try
             {
-                //await _hubConnection.StartAsync();
                 AddLog("Mạng", "KẾT NỐI", "Đã kết nối SignalR thành công.");
             }
             catch (Exception ex)
@@ -63,11 +56,9 @@ namespace TrafficSystem_WinForm
             }
         }
 
-        // --- 3. HÀM THÊM LỊCH SỬ VÀO DATAGRIDVIEW ---
-        // Đẩy thông tin vào dgvLogs. Hàm này an toàn với đa luồng (Thread-safe)
+        //lich su hoat dong
         private void AddLog(string eventPhase, string mode, string details)
         {
-            // Đảm bảo thao tác trên UI Thread
             if (dgvLogs.InvokeRequired)
             {
                 dgvLogs.Invoke(new Action(() => AddLog(eventPhase, mode, details)));
@@ -76,23 +67,19 @@ namespace TrafficSystem_WinForm
 
             try
             {
-                // Lấy thời gian hiện tại
                 string timeStr = DateTime.Now.ToString("HH:mm:ss dd/MM");
 
-                // Thêm một dòng mới lên đầu danh sách (Index = 0)
-                // Thứ tự cột: Thời gian, Sự kiện/Pha, Chế độ, Chi tiết lệnh
                 dgvLogs.Rows.Insert(0, timeStr, eventPhase, mode, details);
 
-                // Giữ lại tối đa 100 dòng gần nhất để tránh phần mềm bị nặng và lag
                 if (dgvLogs.Rows.Count > 100)
                 {
                     dgvLogs.Rows.RemoveAt(dgvLogs.Rows.Count - 1);
                 }
             }
-            catch { /* Bỏ qua nếu DataGridView chưa khởi tạo kịp */ }
+            catch { }
         }
 
-        // --- 4. CẤU HÌNH KẾT NỐI TRUYỀN DỮ LIỆU SIGNALR ---
+        //cau hinh signalIR
         private void SetupSignalR()
         {
             _hubConnection = new HubConnectionBuilder()
@@ -109,7 +96,6 @@ namespace TrafficSystem_WinForm
             });
         }
 
-        // --- 5. HÀM CẬP NHẬT GIAO DIỆN REAL-TIME TỪ DỮ LIỆU THẬT ---
         private void UpdateRealTimeUI(TrafficStatus status)
         {
             try
@@ -118,17 +104,15 @@ namespace TrafficSystem_WinForm
 
                 currentMode = status.Mode?.ToUpper();
 
-                // GHI LOG: Phát hiện chuyển chế độ từ Backend
                 if (!string.IsNullOrEmpty(currentMode) && currentMode != _lastMode)
                 {
-                    if (_lastMode != "") // Bỏ qua lần load dữ liệu đầu tiên
+                    if (_lastMode != "") 
                     {
                         AddLog("Chuyển chế độ", currentMode, $"Hệ thống chuyển từ {_lastMode} sang {currentMode}");
                     }
                     _lastMode = currentMode;
                 }
 
-                // GHI LOG: Phát hiện chuyển pha đèn (Chỉ ở chế độ AUTO để tránh spam quá nhiều)
                 if (currentMode == "AUTO")
                 {
                     if (status.NorthLight != _lastNorthLight || status.EastLight != _lastEastLight)
@@ -155,6 +139,10 @@ namespace TrafficSystem_WinForm
                     case "EMERGENCY":
                         lblStatusTag.Text = "CHẾ ĐỘ: KHẨN CẤP";
                         lblStatusTag.BackColor = Color.OrangeRed;
+                        break;
+                    case "FLASH":
+                        lblStatusTag.Text = "CHẾ ĐỘ: CẢNH BÁO";
+                        lblStatusTag.BackColor = Color.Gold;
                         break;
                     default:
                         lblStatusTag.Text = "CHẾ ĐỘ: KHÔNG XÁC ĐỊNH";
@@ -239,10 +227,9 @@ namespace TrafficSystem_WinForm
 
                 await _httpClient.PostAsync($"{_baseUrl}/api/control", content);
             }
-            catch { /* Tạm ẩn lỗi ngầm */ }
+            catch {/*an loi ngam*/  }
         }
 
-        // --- 6. LOGIC XỬ LÝ CÁC NÚT ĐIỀU KHIỂN CHẾ ĐỘ ---
         private async void btnModeAuto_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "AUTO", "Gửi lệnh yêu cầu chế độ Tự Động.");
@@ -291,7 +278,7 @@ namespace TrafficSystem_WinForm
         private async void btnNSG_EWR_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Bắc/Nam (XANH) - Đông/Tây (ĐỎ).");
-            await SendLightCommand("BN", "XANH"); // Arduino sẽ tự động hiểu và ép Đông/Tây về đỏ
+            await SendLightCommand("BN", "XANH"); 
         }
 
         private async void btnNSY_EWR_Click(object sender, EventArgs e)
@@ -303,7 +290,7 @@ namespace TrafficSystem_WinForm
         private async void btnEWG_NSR_Click(object sender, EventArgs e)
         {
             AddLog("Lệnh người dùng", "MANUAL", "Ép đèn Đông/Tây (XANH) - Bắc/Nam (ĐỎ).");
-            await SendLightCommand("DT", "XANH"); // Arduino sẽ tự động hiểu và ép Bắc/Nam về đỏ
+            await SendLightCommand("DT", "XANH"); 
         }
 
         private async void btnEWY_NSR_Click(object sender, EventArgs e)
@@ -312,7 +299,6 @@ namespace TrafficSystem_WinForm
             await SendLightCommand("DT", "VANG");
         }
 
-        // --- 8. LƯU VÀ ÁP DỤNG CẤU HÌNH THỜI GIAN ĐÈN MỚI ---
         private async void btnSaveConfig_Click(object sender, EventArgs e)
         {
             try
@@ -390,29 +376,27 @@ namespace TrafficSystem_WinForm
             }
         }
 
-        private bool isConnected = false; // Đổi tên biến cho rõ nghĩa: Trạng thái kết nối của WinForm
+        private bool isConnected = false; 
 
         private async void btnOnOff_Click(object sender, EventArgs e)
         {
-            btnOnOff.Enabled = false; // Khóa tạm thời nút master để tránh click double
+            btnOnOff.Enabled = false; //khoa tam thoi cac chuc nang
 
-            if (!isConnected) // TÌNH HUỐNG: NGƯỜI DÙNG ẤN "BẬT KẾT NỐI"
+            if (!isConnected) //bat ket noi
             {
                 try
                 {
-                    // 1. Kết nối SignalR để nhận dữ liệu
+                    //ket noi signalIR
                     if (_hubConnection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Disconnected)
                     {
                         await _hubConnection.StartAsync();
                         AddLog("Mạng", "KẾT NỐI", "WinForm đã kết nối thành công tới hệ thống.");
                     }
 
-                    // 2. MỞ KHÓA toàn bộ các nút bấm điều khiển khác trên màn hình
-                    SetControlButtonsState(true);
+                    SetControlButtonsState(true);//mo khoa cac nut
 
-                    // 3. Thay đổi giao diện nút Master sang màu đỏ (Sẵn sàng NGẮT)
                     isConnected = true;
-                    btnOnOff.Text = "NGẮT KẾT NỐI";
+                    btnOnOff.Text = "NGẮT HỆ THỐNG";
                     btnOnOff.BackColor = Color.Red;
                 }
                 catch (Exception ex)
@@ -421,12 +405,10 @@ namespace TrafficSystem_WinForm
                                     "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            else // TÌNH HUỐNG: NGƯỜI DÙNG ẤN "NGẮT KẾT NỐI"
+            else //ngat ket noi
             {
                 try
                 {
-                    // 1. GỬI LỆNH RESTART QUA API ĐỂ ÉP MẠCH PROTEUS QUAY VỀ TRẠNG THÁI KHỞI TẠO BAN ĐẦU
-                    // Lệnh này sẽ giải phóng chế độ thủ công/khẩn cấp và reset thời gian cài đặt về mặc định.
                     var resetData = new
                     {
                         Action = "RESTART"
@@ -435,17 +417,14 @@ namespace TrafficSystem_WinForm
                     string jsonPayload = JsonSerializer.Serialize(resetData);
                     var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                    // Gọi API đến đầu /api/Control của Backend để ra lệnh cho Proteus
                     await _httpClient.PostAsync($"{_baseUrl}/api/Control", content);
 
                     AddLog("Hệ thống", "RESET", "Đã gửi lệnh khôi phục trạng thái gốc cho mạch Proteus.");
 
 
-                    // 2. KHÓA NGAY toàn bộ các nút bấm điều khiển khác trên màn hình WinForm
                     SetControlButtonsState(false);
 
 
-                    // 3. Ngắt kết nối SignalR của riêng WinForm này để giải phóng băng thông
                     if (_hubConnection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
                     {
                         await _hubConnection.StopAsync();
@@ -453,9 +432,8 @@ namespace TrafficSystem_WinForm
                     }
 
 
-                    // 4. Khôi phục giao diện nút Master về trạng thái ban đầu và reset các đồng hồ về 0
                     isConnected = false;
-                    btnOnOff.Text = "BẬT KẾT NỐI";
+                    btnOnOff.Text = "BẬT HỆ THỐNG";
                     btnOnOff.BackColor = Color.Green;
 
                     lblCountNorth.Text = "0"; lblCountSouth.Text = "0";
@@ -467,21 +445,39 @@ namespace TrafficSystem_WinForm
                 }
             }
 
-            btnOnOff.Enabled = true; // Mở lại nút Master
+            btnOnOff.Enabled = true;
         }
 
         private void SetControlButtonsState(bool isEnabled)
         {
-            // Bạn hãy thay các tên nút dưới đây bằng ĐÚNG tên các nút điều khiển trên giao diện của bạn
-            // Ví dụ: nút tự động, nút thủ công, nút xác nhận đặt thời gian, các ô nhập dữ liệu...
             btnModeAuto.Enabled = isEnabled;
             btnModeManual.Enabled = isEnabled;
             btnModeEmergency.Enabled = isEnabled;
+            btnModeFlash.Enabled = isEnabled;
             btnSaveConfig.Enabled = isEnabled;
 
-            // Nếu có ô nhập thời gian (TextBox) hay ComboBox thì cũng khóa luôn:
-            // txtTime.Enabled = isEnabled;
-            // cboDirection.Enabled = isEnabled;
+        }
+
+        private async void btnModeFlash_Click(object sender, EventArgs e)
+        {
+            AddLog("Lệnh người dùng", "FLASH", "Gửi lệnh yêu cầu chế độ Đèn Nhấp Nháy.");
+            pnlManualGroup.Enabled = false; 
+
+            var requestData = new { Action = "CHANGE_MODE", Mode = "FLASH" };
+            string jsonPayload = JsonSerializer.Serialize(requestData);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await _httpClient.PostAsync($"{_baseUrl}/api/control", content);
+                if (!response.IsSuccessStatusCode)
+                    MessageBox.Show("Backend nhận lệnh nhưng mạch không phản hồi!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                AddLog("Mạng", "LỖI", "Gửi lệnh FLASH thất bại.");
+                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -72,8 +72,6 @@ namespace Backend.Controllers
                         });
                     }
 
-                    // Gộp 3 thông số thành chuỗi định dạng "Xanh,Vàng,Đỏ" (Ví dụ: "25,3,28")
-                    // Cách này đưa về overload 2 tham số, giải quyết triệt để lỗi build CS1501
                     string combinedTimeData = $"{req.Green},{req.Yellow},{req.Red}";
 
                     SerialBridgeService.Instance?.SendCommandToArduino(
