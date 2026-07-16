@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Cấu hình kết nối MySQL Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=localhost;Database=TrafficSystem;User=root;Password=123456;";
+    ?? "Server=localhost;Database=TrafficSystem;User=root;Password=thanhle0405;";
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
